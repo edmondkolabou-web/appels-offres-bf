@@ -11,7 +11,13 @@ import time
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from database.database import get_connection, init_db
-from scraper.sources import scraper_lesaffairesbf, scraper_arcop
+from scraper.sources import (
+    scraper_lesaffairesbf,
+    scraper_arcop,
+    scraper_joffres,
+    scraper_dgcmef,
+    scraper_pnud,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -77,15 +83,28 @@ def lancer_scraping():
     resultats = []
 
     # --- lesaffairesbf.com : 3 premières pages ---
-    print("\n[1/2] lesaffairesbf.com (3 pages) ...")
-    offres_lesaffaires = scraper_lesaffairesbf(max_pages=3)
-    resultats.append(("lesaffairesbf.com", offres_lesaffaires))
+    print("\n[1/5] lesaffairesbf.com (3 pages) ...")
+    resultats.append(("lesaffairesbf.com", scraper_lesaffairesbf(max_pages=3)))
     time.sleep(2)
 
-    # --- arcop.bf : toutes les pages (2 au total) ---
-    print("\n[2/2] arcop.bf (2 pages) ...")
-    offres_arcop = scraper_arcop(max_pages=2)
-    resultats.append(("arcop.bf", offres_arcop))
+    # --- arcop.bf : 2 pages disponibles ---
+    print("\n[2/5] arcop.bf (2 pages) ...")
+    resultats.append(("arcop.bf", scraper_arcop(max_pages=2)))
+    time.sleep(2)
+
+    # --- joffres.net : 2 premières pages (public + privé) ---
+    print("\n[3/5] joffres.net (2 pages public + privé) ...")
+    resultats.append(("joffres.net", scraper_joffres(max_pages=2)))
+    time.sleep(2)
+
+    # --- dgcmef.gov.bf : tableau de quotidiens ---
+    print("\n[4/5] dgcmef.gov.bf ...")
+    resultats.append(("dgcmef.gov.bf", scraper_dgcmef()))
+    time.sleep(2)
+
+    # --- PNUD Burkina Faso ---
+    print("\n[5/5] procurement-notices.undp.org (BF) ...")
+    resultats.append(("pnud", scraper_pnud()))
 
     # --- Sauvegarde ---
     print("\n" + "-" * 60)
