@@ -11,7 +11,7 @@ import time
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from database.database import get_connection, init_db
-from sources import scraper_lesaffairesbf, scraper_arcop
+from scraper.sources import scraper_lesaffairesbf, scraper_arcop
 
 
 # ---------------------------------------------------------------------------
@@ -64,7 +64,7 @@ def sauvegarder_offres(offres: list[dict]) -> tuple[int, int]:
 # Orchestrateur
 # ---------------------------------------------------------------------------
 
-def run_scraping():
+def lancer_scraping():
     """Lance tous les scrapers et sauvegarde les résultats en base."""
 
     print("\n" + "=" * 60)
@@ -149,4 +149,4 @@ def _afficher_offres_en_base():
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    run_scraping()
+    lancer_scraping()

@@ -8,19 +8,39 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
 
-from database.database import get_connection
+from database.database import get_connection, init_db
 from alertes.alertes import envoyer_email_test, traiter_alertes
 
 TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "..", "templates")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # ── Démarrage ──────────────────────────────────────────────────
+    init_db()
+    conn = get_connection()
+    count = conn.execute("SELECT COUNT(*) FROM offres").fetchone()[0]
+    conn.close()
+    if count == 0:
+        print("Base vide — lancement du scraping initial...")
+        from scraper.scraper import lancer_scraping
+        lancer_scraping()
+    else:
+        print(f"Base OK — {count} offre(s) en base.")
+    yield
+    # ── Arrêt (rien à nettoyer pour l'instant) ─────────────────────
+
 
 app = FastAPI(
     title="Appels Offres BF",
     description="API d'agrégation des appels d'offres publics et privés du Burkina Faso",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 
