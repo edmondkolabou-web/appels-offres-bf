@@ -13,10 +13,10 @@ import secrets
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 
-from database import get_db
-from models import Abonne, PreferenceAlerte
-from schemas import RegisterIn, LoginIn, TokenOut, AbonneOut, AbonneUpdate
-from security import (hash_password, verify_password,
+from backend.database import get_db
+from backend.models import Abonne, PreferenceAlerte
+from backend.schemas import RegisterIn, LoginIn, TokenOut, AbonneOut, AbonneUpdate
+from backend.security import (hash_password, verify_password,
                       create_access_token, get_current_abonne)
 
 router = APIRouter()
@@ -47,7 +47,7 @@ def register(
         entreprise=body.entreprise,
         whatsapp=body.whatsapp,
         plan=body.plan,
-        email_verified=False,
+        email_verifie=False,
         actif=True,
     )
     db.add(abonne)
@@ -110,7 +110,7 @@ def login(body: LoginIn, db: Session = Depends(get_db)):
 @router.get("/me", response_model=AbonneOut)
 def me(current: Abonne = Depends(get_current_abonne)):
     """Retourne le profil de l'abonné connecté."""
-    return AbonneOut.model_validate(current)
+    return AbonneOut.from_orm_compat(current)
 
 
 @router.put("/me", response_model=AbonneOut)
@@ -130,7 +130,7 @@ def update_me(
         current.whatsapp = body.whatsapp
     db.commit()
     db.refresh(current)
-    return AbonneOut.model_validate(current)
+    return AbonneOut.from_orm_compat(current)
 
 
 @router.post("/verify-email")
@@ -142,7 +142,7 @@ def verify_email(token: str, db: Session = Depends(get_db)):
     abonne = db.get(Abonne, abonne_id)
     if not abonne:
         raise HTTPException(status_code=404, detail="Abonné introuvable")
-    abonne.email_verified = True
+    abonne.email_verifie = True
     db.commit()
     return {"message": "Email vérifié avec succès"}
 

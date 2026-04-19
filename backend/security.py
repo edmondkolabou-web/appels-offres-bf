@@ -11,8 +11,8 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from database import get_db
-from models import Abonne
+from backend.database import get_db
+from backend.models import Abonne
 
 SECRET_KEY   = os.getenv("JWT_SECRET_KEY", "change-me-in-production-netsync-gov-2026")
 ALGORITHM    = "HS256"

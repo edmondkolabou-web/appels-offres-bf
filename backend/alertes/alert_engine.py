@@ -9,7 +9,7 @@ from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import text, func
 
-from models import AppelOffre, Abonne, PreferenceAlerte, EnvoiAlerte
+from backend.models import AppelOffre, Abonne, PreferenceAlerte, EnvoiAlerte
 from whatsapp import AOAlertWhatsApp
 from email_sender import ResendClient
 from email_templates import render_nouvel_ao, render_rappel_j3, render_bienvenue

@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
-from models import EnvoiAlerte, Abonne, AppelOffre
+from backend.models import EnvoiAlerte, Abonne, AppelOffre
 
 logger = logging.getLogger("netsync.retry")
 

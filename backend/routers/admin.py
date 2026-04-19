@@ -14,10 +14,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from database import get_db
-from models import Abonne, AppelOffre, EnvoiAlerte, PipelineLog
-from schemas import PipelineLogOut, StatsOut
-from security import require_admin
+from backend.database import get_db
+from backend.models import Abonne, AppelOffre, EnvoiAlerte, PipelineLog
+from backend.schemas import PipelineLogOut, StatsOut
+from backend.security import require_admin
 
 router = APIRouter()
 

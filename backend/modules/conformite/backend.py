@@ -13,9 +13,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from pydantic import BaseModel
 
-from database import get_db
-from security import require_pro
-from models import Abonne
+from backend.database import get_db
+from backend.security import require_pro
+from backend.models import Abonne
 
 logger = logging.getLogger("netsync.conformite")
 

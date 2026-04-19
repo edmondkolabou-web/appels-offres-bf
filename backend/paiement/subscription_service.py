@@ -10,7 +10,7 @@ from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
-from models import Abonne, Paiement
+from backend.models import Abonne, Paiement
 from cinetpay_client import CinetPayClient
 
 logger = logging.getLogger("netsync.subscription")

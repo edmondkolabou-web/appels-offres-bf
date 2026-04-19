@@ -3,7 +3,7 @@ NetSync Gov — Session SQLAlchemy pour FastAPI
 """
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
-from config import config
+from backend.config import config
 
 engine = create_engine(
     config.DATABASE_URL,

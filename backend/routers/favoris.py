@@ -10,10 +10,10 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from database import get_db
-from models import Abonne, AppelOffre, Favori
-from schemas import FavoriIn, FavoriOut
-from security import get_current_abonne
+from backend.database import get_db
+from backend.models import Abonne, AppelOffre, Favori
+from backend.schemas import FavoriIn, FavoriOut
+from backend.security import get_current_abonne
 
 router = APIRouter()
 

@@ -14,10 +14,10 @@ import requests
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
-from database import get_db
-from models import Abonne, Paiement
-from schemas import PaiementIn, PaiementOut
-from security import get_current_abonne
+from backend.database import get_db
+from backend.models import Abonne, Paiement
+from backend.schemas import PaiementIn, PaiementOut
+from backend.security import get_current_abonne
 
 router = APIRouter()
 logger = logging.getLogger("netsync.paiements")

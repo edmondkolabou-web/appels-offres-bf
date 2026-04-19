@@ -3,7 +3,7 @@ NetSync Gov — Utilitaires partagés pour les alertes.
 """
 from datetime import date
 from typing import Optional
-from models import AppelOffre
+from backend.models import AppelOffre
 
 
 def build_ao_email_context(ao: AppelOffre) -> dict:

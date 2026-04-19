@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import logging
 
-from routers import aos, auth, alertes, favoris, paiements, admin
+from backend.routers import aos, auth, alertes, favoris, paiements, admin
 
 # ── Logging ────────────────────────────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO,

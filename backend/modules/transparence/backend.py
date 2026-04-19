@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from pydantic import BaseModel
 
-from database import get_db
+from backend.database import get_db
 
 logger = logging.getLogger("netsync.transparence")
 

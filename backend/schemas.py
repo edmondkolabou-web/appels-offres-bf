@@ -97,10 +97,26 @@ class AbonneOut(BaseModel):
     entreprise:  Optional[str] = None
     whatsapp:    Optional[str] = None
     plan:        str
-    est_pro:     bool
+    est_pro:     bool = False
     created_at:  datetime
 
     model_config = {"from_attributes": True}
+
+    @classmethod
+    def from_orm_compat(cls, abonne):
+        """Convertit un modèle SQLAlchemy en AbonneOut avec est_pro calculé."""
+        return cls(
+            id=abonne.id,
+            email=abonne.email,
+            prenom=abonne.prenom,
+            nom=abonne.nom,
+            entreprise=abonne.entreprise,
+            whatsapp=abonne.whatsapp,
+            plan=abonne.plan,
+            est_pro=(abonne.plan in ('pro', 'equipe')),
+            created_at=abonne.created_at,
+        )
+
 
 class AbonneUpdate(BaseModel):
     prenom:     Optional[str] = None

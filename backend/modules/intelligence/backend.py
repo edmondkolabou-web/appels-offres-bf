@@ -13,9 +13,9 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
-from database import get_db
-from security import get_current_abonne, require_pro
-from models import Abonne
+from backend.database import get_db
+from backend.security import get_current_abonne, require_pro
+from backend.models import Abonne
 
 logger = logging.getLogger("netsync.intelligence")
 

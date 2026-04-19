@@ -11,7 +11,7 @@ from datetime import date
 import requests
 from sqlalchemy.orm import Session
 
-from models import AppelOffre, Abonne, EnvoiAlerte
+from backend.models import AppelOffre, Abonne, EnvoiAlerte
 
 logger = logging.getLogger("netsync.whatsapp")
 
