@@ -1,0 +1,39 @@
+# Environnement
+.env
+.env.*
+!.env.example
+deploy/.env.production
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+.pytest_cache/
+
+# Node
+node_modules/
+dist/
+.nuxt/
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Base de données locale
+*.db
+*.sqlite
+
+# PDFs téléchargés
+pipeline/data/pdfs/

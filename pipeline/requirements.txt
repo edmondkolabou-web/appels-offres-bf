@@ -1,0 +1,29 @@
+# NetSync Gov — Pipeline PDF DGCMEF
+# Installation : pip install -r requirements.txt
+
+# ── Web scraping ──
+requests==2.31.0
+beautifulsoup4==4.12.3
+lxml==5.2.1
+
+# ── PDF Parsing ──
+pdfplumber==0.11.1
+PyMuPDF==1.24.3          # Fallback si pdfplumber échoue
+dateparser==1.2.0        # Parsing dates multiformat
+
+# ── Base de données ──
+SQLAlchemy==2.0.30
+psycopg2-binary==2.9.9
+alembic==1.13.1
+
+# ── Celery / Redis ──
+redis==5.0.4
+celery[redis]==5.4.0
+
+# ── API Claude (fallback LLM) ──
+anthropic==0.28.0
+
+# ── Utilitaires ──
+python-dotenv==1.0.1     # Variables d'environnement
+structlog==24.2.0        # Logging structuré
+sentry-sdk==2.5.1        # Monitoring erreurs

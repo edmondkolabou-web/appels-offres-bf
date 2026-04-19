@@ -1,0 +1,46 @@
+# ============================================================
+# NetSync Gov — Template .env.production
+# À copier dans : 13_Deploiement_Docker_VPS/.env.production
+# NE JAMAIS committer ce fichier sur GitHub
+# ============================================================
+
+# ── Base de données PostgreSQL ────────────────────────────────
+DB_PASSWORD=CHANGER_MOI_mot_de_passe_fort
+
+# ── Redis ─────────────────────────────────────────────────────
+REDIS_PASSWORD=CHANGER_MOI_autre_mot_de_passe
+
+# ── JWT (générer avec : python3 -c "import secrets; print(secrets.token_hex(32))")
+JWT_SECRET_KEY=CHANGER_MOI_chaine_aleatoire_64_chars_minimum
+
+# ── Resend (email) ────────────────────────────────────────────
+RESEND_API_KEY=re_CHANGER_MOI
+RESEND_FROM_EMAIL=alertes@gov.netsync.bf
+RESEND_REPLY_TO=support@netsync.bf
+
+# ── WhatsApp Business API (Meta) ──────────────────────────────
+WHATSAPP_API_TOKEN=EAA_CHANGER_MOI
+WHATSAPP_PHONE_ID=CHANGER_MOI
+WHATSAPP_WABA_ID=CHANGER_MOI
+
+# ── Claude API (fallback parsing PDF) ─────────────────────────
+ANTHROPIC_API_KEY=sk-ant-CHANGER_MOI
+
+# ── CinetPay ──────────────────────────────────────────────────
+CINETPAY_SITE_ID=CHANGER_MOI
+CINETPAY_API_KEY=CHANGER_MOI
+CINETPAY_SECRET_KEY=CHANGER_MOI
+CINETPAY_NOTIFY_URL=https://api.gov.netsync.bf/api/v1/paiements/webhook
+CINETPAY_RETURN_URL=https://gov.netsync.bf/paiement/succes
+
+# ── Admin ─────────────────────────────────────────────────────
+ADMIN_EMAIL=ton.email@gmail.com
+ADMIN_EMAILS=ton.email@gmail.com
+
+# ── Domaines ──────────────────────────────────────────────────
+DOMAIN=gov.netsync.bf
+API_DOMAIN=api.gov.netsync.bf
+ENVIRONMENT=production
+
+# ── Stockage ──────────────────────────────────────────────────
+PDF_STORAGE_DIR=/data/pdfs

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetSync Gov — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue-50:#E6F1FB;--blue-100:#B5D4F4;--blue-200:#85B7EB;--blue-300:#5BA8E8;
+  --blue-400:#378ADD;--blue-500:#0082C9;--blue-600:#006AA3;--blue-700:#005080;
+  --green-50:#EAF3DE;--green-400:#1D9E75;--green-600:#0F6E56;
+  --amber-50:#FAEEDA;--amber-400:#BA7517;--amber-600:#854F0B;
+  --red-50:#FCEBEB;--red-400:#E24B4A;--red-600:#A32D2D;
+  --ink:#0F1923;--ink-700:#2A3440;--ink-500:#4A5568;--muted:#64748B;
+  --border:#E2E8F0;--border-md:#CBD5E1;--surface:#F7F9FB;--surface-2:#EFF3F7;
+  --white:#FFFFFF;
+  --font-display:'DM Serif Display',serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius-sm:4px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px;--radius-full:9999px;
+  --shadow-sm:0 1px 3px rgba(15,25,35,.06);
+  --shadow-md:0 4px 12px rgba(15,25,35,.08);
+  --shadow-blue:0 4px 16px rgba(0,130,201,.25);
+  --nav-w:240px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:14px;}
+body{font-family:var(--font-body);color:var(--ink);background:var(--surface);display:flex;min-height:100vh;-webkit-font-smoothing:antialiased;}
+
+/* ══ SIDEBAR NAV ══ */
+.sidenav{width:var(--nav-w);background:var(--ink);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;overflow-y:auto;}
+.sidenav-logo{display:flex;align-items:center;gap:10px;padding:1.25rem 1.25rem 1rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.sidenav-logo-icon{width:34px;height:34px;background:var(--blue-500);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sidenav-logo-text{font-family:var(--font-display);font-size:1rem;color:var(--white);line-height:1.2;}
+.sidenav-logo-sub{font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.03em;}
+.sidenav-section{padding:.875rem 1rem .5rem;}
+.sidenav-section-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);margin-bottom:.4rem;}
+.activity-time{font-size:11px;color:var(--ink-500);margin-top:2px;}
+.sidenav-item{display:flex;align-items:center;gap:10px;padding:.625rem .875rem;border-radius:var(--radius-md);cursor:pointer;font-size:13px;color:rgba(255,255,255,.55);transition:all .15s;text-decoration:none;margin-bottom:2px;}
+.sidenav-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85);}
+.sidenav-item.active{background:rgba(0,130,201,.25);color:var(--white);border-left:2px solid var(--blue-400);}
+.sidenav-item svg{width:16px;height:16px;flex-shrink:0;opacity:.7;}
+.sidenav-item.active svg{opacity:1;}
+.sidenav-badge{margin-left:auto;background:var(--blue-500);color:var(--white);font-size:10px;font-weight:600;padding:1px 6px;border-radius:var(--radius-full);}
+.sidenav-badge.red{background:var(--red-400);}
+.sidenav-bottom{margin-top:auto;padding:1rem;border-top:1px solid rgba(255,255,255,.07);}
+.sidenav-user{display:flex;align-items:center;gap:10px;padding:.625rem .5rem;border-radius:var(--radius-md);cursor:pointer;transition:background .15s;}
+.sidenav-user:hover{background:rgba(255,255,255,.06);}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--blue-500);color:var(--white);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sidenav-user-info{flex:1;min-width:0;}
+.sidenav-user-name{font-size:12px;font-weight:500;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidenav-user-plan{font-size:10px;color:rgba(255,255,255,.35);}
+.plan-chip{display:inline-block;font-size:9px;font-weight:600;padding:1px 6px;border-radius:var(--radius-full);background:var(--blue-500);color:var(--white);text-transform:uppercase;letter-spacing:.04em;}
+
+/* ══ MAIN ══ */
+.main{margin-left:var(--nav-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── Top bar ── */
+.topbar{background:var(--white);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;padding:0 1.5rem;gap:1rem;position:sticky;top:0;z-index:100;}
+.topbar-title{font-size:15px;font-weight:500;color:var(--ink);}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:.75rem;}
+.icon-btn{width:32px;height:32px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all .15s;position:relative;}
+.icon-btn:hover{border-color:var(--blue-300);color:var(--blue-500);background:var(--blue-50);}
+.notif-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--red-400);border:1.5px solid var(--white);}
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-weight:500;border-radius:var(--radius-md);border:none;cursor:pointer;transition:all .2s;font-size:13px;padding:7px 14px;}
+.btn-primary{background:var(--blue-500);color:var(--white);box-shadow:var(--shadow-blue);}
+.btn-primary:hover{background:var(--blue-600);}
+.btn-ghost{background:var(--white);color:var(--ink);border:1px solid var(--border-md);}
+.btn-ghost:hover{background:var(--surface);}
+
+/* ── Content ── */
+.content{padding:1.5rem;flex:1;}
+
+/* ── GRILLE KPI ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+.kpi-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.25rem;transition:box-shadow .2s;}
+.kpi-card:hover{box-shadow:var(--shadow-md);border-color:var(--blue-100);}
+.kpi-card.accent{border-color:var(--blue-200);background:var(--blue-50);}
+.kpi-icon{width:36px;height:36px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin-bottom:.875rem;}
+.kpi-icon svg{width:18px;height:18px;}
+.kpi-icon-blue{background:var(--blue-50);color:var(--blue-500);}
+.kpi-icon-green{background:var(--green-50);color:var(--green-400);}
+.kpi-icon-amber{background:var(--amber-50);color:var(--amber-400);}
+.kpi-icon-red{background:var(--red-50);color:var(--red-400);}
+.kpi-val{font-family:var(--font-display);font-size:1.8rem;color:var(--ink);line-height:1;margin-bottom:4px;}
+.kpi-label{font-size:12px;color:var(--muted);}
+.kpi-trend{font-size:11px;font-weight:500;margin-top:6px;}
+.trend-up{color:var(--green-400);}
+.trend-warn{color:var(--amber-400);}
+.trend-down{color:var(--red-400);}
+
+/* ── MAIN GRID ── */
+.dash-grid{display:grid;grid-template-columns:1fr 340px;gap:1.5rem;}
+
+/* ── AO section ── */
+.section-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;}
+.section-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border);}
+.section-header-title{font-size:14px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px;}
+.section-header-icon{width:26px;height:26px;border-radius:var(--radius-md);background:var(--blue-50);display:flex;align-items:center;justify-content:center;}
+.section-header-icon svg{width:13px;height:13px;color:var(--blue-500);}
+
+/* AO List items */
+.ao-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.25rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.ao-item:last-child{border-bottom:none;}
+.ao-item:hover{background:var(--surface);}
+.ao-item-left{flex:1;min-width:0;}
+.ao-item-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:.4rem;}
+.ao-item-title{font-size:13px;font-weight:500;color:var(--ink);line-height:1.4;margin-bottom:.3rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ao-item-meta{font-size:11px;color:var(--muted);font-family:var(--font-mono);letter-spacing:-.01em;}
+.ao-item-right{display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;flex-shrink:0;}
+.ao-item-date{font-size:11px;font-weight:500;text-align:right;}
+.ao-item-date.urgent{color:var(--red-600);}
+.ao-item-date.ok{color:var(--green-600);}
+.ao-item-date.neutral{color:var(--muted);}
+.ao-save-btn{width:26px;height:26px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all .15s;}
+.ao-save-btn:hover{border-color:var(--amber-400);color:var(--amber-400);}
+.ao-save-btn.saved{border-color:var(--amber-400);color:var(--amber-400);background:var(--amber-50);}
+
+/* Tags */
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:var(--radius-sm);text-transform:uppercase;letter-spacing:.04em;}
+.tag-ouvert{background:var(--green-50);color:var(--green-600);}
+.tag-cloture{background:var(--red-50);color:var(--red-600);}
+.tag-it{background:#EDE9FE;color:#5B21B6;}
+.tag-btp{background:var(--blue-50);color:var(--blue-600);}
+.tag-conseil{background:var(--surface-2);color:var(--muted);border:1px solid var(--border);}
+.tag-sante{background:#FEF3C7;color:#92400E;}
+.tag-urgent{background:var(--red-50);color:var(--red-600);}
+.tag-new{background:var(--blue-50);color:var(--blue-600);}
+
+/* View all link */
+.view-all{display:flex;align-items:center;justify-content:center;padding:.875rem;font-size:12px;color:var(--blue-500);cursor:pointer;border-top:1px solid var(--border);transition:background .15s;text-decoration:none;}
+.view-all:hover{background:var(--blue-50);}
+
+/* ── SIDEBAR DROITE ── */
+.right-col{display:flex;flex-direction:column;gap:1rem;}
+
+/* Alertes config */
+.alert-config-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;}
+.alert-row{display:flex;align-items:center;gap:10px;padding:.75rem 1.25rem;border-bottom:1px solid var(--border);font-size:13px;}
+.alert-row:last-child{border-bottom:none;}
+.alert-row-icon{width:28px;height:28px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.alert-row-icon svg{width:13px;height:13px;}
+.alert-row-body{flex:1;min-width:0;}
+.alert-row-title{font-size:12px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.alert-row-sub{font-size:11px;color:var(--muted);}
+.toggle{width:34px;height:19px;border-radius:var(--radius-full);background:var(--border-md);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.toggle.on{background:var(--blue-500);}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:var(--white);transition:left .2s;box-shadow:var(--shadow-sm);}
+.toggle.on .toggle-thumb{left:17px;}
+
+/* Calendrier */
+.calendar-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;}
+.cal-header{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.25rem;border-bottom:1px solid var(--border);}
+.cal-title{font-size:13px;font-weight:600;color:var(--ink);}
+.cal-nav{display:flex;gap:4px;}
+.cal-nav-btn{width:26px;height:26px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all .15s;}
+.cal-nav-btn:hover{border-color:var(--blue-300);color:var(--blue-500);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:.75rem 1rem;}
+.cal-day-label{font-size:10px;font-weight:600;text-align:center;color:var(--muted);padding:.3rem 0;text-transform:uppercase;letter-spacing:.05em;}
+.cal-day{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:50%;cursor:pointer;color:var(--muted);transition:all .15s;position:relative;}
+.cal-day:hover{background:var(--surface);}
+.cal-day.today{background:var(--blue-500);color:var(--white);font-weight:600;}
+.cal-day.has-ao::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--amber-400);}
+.cal-day.has-ao.urgent::after{background:var(--red-400);}
+.cal-day.other-month{opacity:.3;}
+.cal-legend{display:flex;gap:1rem;padding:.75rem 1.25rem;border-top:1px solid var(--border);font-size:11px;color:var(--muted);}
+.cal-legend-item{display:flex;align-items:center;gap:5px;}
+.cal-legend-dot{width:8px;height:8px;border-radius:50%;}
+
+/* Plan upgrade card */
+.upgrade-card{background:linear-gradient(135deg,var(--ink) 0%,var(--blue-700) 100%);border-radius:var(--radius-xl);padding:1.25rem;position:relative;overflow:hidden;}
+.upgrade-card::before{content:'';position:absolute;top:-20px;right:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.04);}
+.upgrade-card::after{content:'';position:absolute;bottom:-30px;left:-10px;width:100px;height:100px;border-radius:50%;background:rgba(0,130,201,.15);}
+.upgrade-title{font-family:var(--font-display);font-size:1rem;color:var(--white);margin-bottom:.375rem;position:relative;z-index:1;}
+.upgrade-desc{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:1rem;line-height:1.5;position:relative;z-index:1;}
+.upgrade-features{display:flex;flex-direction:column;gap:.375rem;margin-bottom:1rem;position:relative;z-index:1;}
+.upgrade-feat{font-size:12px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:6px;}
+.upgrade-feat-check{color:var(--green-400);}
+.upgrade-btn{width:100%;padding:10px;background:var(--blue-500);color:var(--white);border:none;border-radius:var(--radius-md);font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;transition:background .2s;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:6px;}
+.upgrade-btn:hover{background:var(--blue-600);}
+
+/* Activité récente */
+.activity-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;}
+.activity-item{display:flex;align-items:flex-start;gap:.875rem;padding:.875rem 1.25rem;border-bottom:1px solid var(--border);}
+.activity-item:last-child{border-bottom:none;}
+.activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.activity-body{flex:1;}
+.activity-text{font-size:12px;color:var(--ink-700);line-height:1.4;}
+
+
+/* Stats chart (simple barres CSS) */
+.chart-section{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.25rem;margin-bottom:1.5rem;}
+.chart-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1rem;}
+.chart-bars{display:flex;align-items:flex-end;gap:.5rem;height:80px;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.chart-bar{width:100%;border-radius:var(--radius-sm) var(--radius-sm) 0 0;transition:opacity .2s;cursor:pointer;min-height:4px;}
+.chart-bar:hover{opacity:.75;}
+.chart-label{font-size:10px;color:var(--muted);text-align:center;}
+.chart-legend{display:flex;gap:1rem;margin-top:.75rem;flex-wrap:wrap;}
+.chart-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.chart-legend-dot{width:8px;height:8px;border-radius:2px;}
+
+/* Tabs */
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--white);}
+.tab-btn{padding:.75rem 1.25rem;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;}
+.tab-btn:hover{color:var(--ink);}
+.tab-btn.active{color:var(--blue-500);border-bottom-color:var(--blue-500);}
+
+/* Alerte banner */
+.dash-alert{background:var(--amber-50);border:1px solid #F0D5A0;border-radius:var(--radius-lg);padding:.875rem 1.25rem;display:flex;align-items:center;gap:.875rem;margin-bottom:1.5rem;font-size:13px;color:var(--amber-600);}
+.dash-alert a{color:var(--blue-500);font-weight:500;text-decoration:none;}
+.dash-alert a:hover{text-decoration:underline;}
+
+/* Toast */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;background:var(--ink);color:var(--white);font-size:13px;font-weight:500;padding:12px 18px;border-radius:var(--radius-lg);box-shadow:0 8px 24px rgba(0,0,0,.2);display:flex;align-items:center;gap:8px;transition:opacity .3s,transform .3s;pointer-events:none;}
+.toast.hidden{opacity:0;transform:translateY(8px);}
+
+/* Responsive */
+@media(max-width:1100px){.dash-grid{grid-template-columns:1fr;}}
+@media(max-width:900px){.kpi-grid{grid-template-columns:1fr 1fr;}.sidenav{transform:translateX(-100%);}.main{margin-left:0;}}
+@media(max-width:500px){.kpi-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR NAV ══ -->
+<nav class="sidenav" aria-label="Navigation principale">
+  <div class="sidenav-logo">
+    <div class="sidenav-logo-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div>
+      <div class="sidenav-logo-text">NetSync Gov</div>
+      <div class="sidenav-logo-sub">Appels d'offres BF</div>
+    </div>
+  </div>
+
+  <div class="sidenav-section">
+    <div class="sidenav-section-label">Principal</div>
+    <a class="sidenav-item active" href="#" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Tableau de bord
+    </a>
+    <a class="sidenav-item" href="#" onclick="showToast('Navigation : Appels d\'offres')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Appels d'offres
+      <span class="sidenav-badge">87</span>
+    </a>
+    <a class="sidenav-item" href="#" onclick="showToast('Navigation : Mes favoris')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+      Mes favoris
+      <span class="sidenav-badge">12</span>
+    </a>
+    <a class="sidenav-item" href="#" onclick="showToast('Navigation : Calendrier')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Calendrier
+      <span class="sidenav-badge red">3</span>
+    </a>
+  </div>
+
+  <div class="sidenav-section">
+    <div class="sidenav-section-label">Alertes</div>
+    <a class="sidenav-item" href="#" onclick="showToast('Navigation : Mes alertes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      Mes alertes
+    </a>
+    <a class="sidenav-item" href="#" onclick="showToast('Navigation : Historique alertes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Historique
+    </a>
+  </div>
+
+  <div class="sidenav-section">
+    <div class="sidenav-section-label">Compte</div>
+    <a class="sidenav-item" href="#" onclick="showToast('Navigation : Abonnement')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="2"/></svg>
+      Abonnement
+    </a>
+    <a class="sidenav-item" href="#" onclick="showToast('Navigation : Paramètres')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M20.5 12H22M2 12h1.5M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41"/></svg>
+      Parametres
+    </a>
+  </div>
+
+  <div class="sidenav-bottom">
+    <div class="sidenav-user" onclick="showToast('Profil utilisateur')">
+      <div class="avatar">EK</div>
+      <div class="sidenav-user-info">
+        <div class="sidenav-user-name">Edmond Kolabou</div>
+        <div class="sidenav-user-plan"><span class="plan-chip">Pro</span></div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div>
+      <div class="topbar-title">Tableau de bord</div>
+    </div>
+    <div class="topbar-right">
+      <div class="icon-btn btn-ghost" title="Notifications" onclick="showToast('3 nouvelles alertes')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </div>
+      <button class="btn btn-primary" aria-label="Configurer une nouvelle alerte" onclick="showToast('Ouverture configuration alerte...')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nouvelle alerte
+      </button>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Alerte banner urgence -->
+    <div class="dash-alert" role="alert">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span><strong>3 appels d'offres clôturent dans moins de 48h.</strong> <a href="#" onclick="showToast('Ouverture calendrier...')">Voir le calendrier →</a></span>
+      <button style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--amber-400);font-size:18px;" aria-label="Fermer l'alerte" onclick="this.parentElement.style.display='none'">×</button>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid" role="region" aria-label="Indicateurs clés">
+      <div class="kpi-card accent">
+        <div class="kpi-icon kpi-icon-blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="kpi-val">47</div>
+        <div class="kpi-label">AO publiés ce mois</div>
+        <div class="kpi-trend trend-up">↑ +12 vs mois dernier</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-icon-red">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="kpi-val">3</div>
+        <div class="kpi-label">Clôtures dans 48h</div>
+        <div class="kpi-trend trend-down">Action requise</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-icon-green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="kpi-val">12</div>
+        <div class="kpi-label">AO enregistrés</div>
+        <div class="kpi-trend trend-up">↑ 3 cette semaine</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-icon-amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </div>
+        <div class="kpi-val">8</div>
+        <div class="kpi-label">Alertes actives</div>
+        <div class="kpi-trend trend-warn">2 secteurs couverts</div>
+      </div>
+    </div>
+
+    <!-- Graphique AO par mois -->
+    <div class="chart-section" role="region" aria-label="Evolution mensuelle des AO">
+      <div class="chart-title">Evolution des AO par secteur — 6 derniers mois</div>
+      <div class="chart-bars" role="img" aria-label="Graphique en barres des AO par mois">
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="height:45%;background:var(--blue-200);" title="Informatique : 8 AO"></div>
+          <div class="chart-bar" style="height:30%;background:var(--green-400);opacity:.7;" title="BTP : 12 AO"></div>
+          <div class="chart-label">Nov</div>
+        </div>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="height:55%;background:var(--blue-200);" title="Informatique : 10 AO"></div>
+          <div class="chart-bar" style="height:40%;background:var(--green-400);opacity:.7;" title="BTP : 15 AO"></div>
+          <div class="chart-label">Déc</div>
+        </div>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="height:38%;background:var(--blue-200);" title="Informatique : 7 AO"></div>
+          <div class="chart-bar" style="height:55%;background:var(--green-400);opacity:.7;" title="BTP : 20 AO"></div>
+          <div class="chart-label">Jan</div>
+        </div>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="height:65%;background:var(--blue-200);" title="Informatique : 12 AO"></div>
+          <div class="chart-bar" style="height:45%;background:var(--green-400);opacity:.7;" title="BTP : 17 AO"></div>
+          <div class="chart-label">Fév</div>
+        </div>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="height:50%;background:var(--blue-200);" title="Informatique : 9 AO"></div>
+          <div class="chart-bar" style="height:60%;background:var(--green-400);opacity:.7;" title="BTP : 22 AO"></div>
+          <div class="chart-label">Mar</div>
+        </div>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="height:80%;background:var(--blue-500);" title="Informatique : 15 AO"></div>
+          <div class="chart-bar" style="height:70%;background:var(--green-400);" title="BTP : 26 AO"></div>
+          <div class="chart-label" style="color:var(--ink);font-weight:500;">Avr</div>
+        </div>
+      </div>
+      <div class="chart-legend">
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--blue-500);"></div>Informatique</div>
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--green-400);"></div>BTP</div>
+      </div>
+    </div>
+
+    <!-- Main grid -->
+    <div class="dash-grid">
+
+      <!-- COLONNE GAUCHE -->
+      <div>
+
+        <!-- AO récents -->
+        <div class="section-card" style="margin-bottom:1rem;">
+          <div class="section-header">
+            <div class="section-header-title">
+              <div class="section-header-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              </div>
+              Nouveaux AO — ce matin
+            </div>
+            <div class="tabs" style="border:none;padding:0;gap:0;">
+              <button class="tab-btn active" onclick="setTab(this,'nouveaux')" aria-label="Voir les nouveaux AO">Nouveaux</button>
+              <button class="tab-btn" onclick="setTab(this,'favoris')" aria-label="Voir les AO favoris">Favoris</button>
+            </div>
+          </div>
+
+          <div id="tab-nouveaux">
+            <div class="ao-item" onclick="showToast('Ouverture fiche AO PRECEL...')">
+              <div class="ao-item-left">
+                <div class="ao-item-tags">
+                  <span class="tag tag-ouvert">Ouvert</span>
+                  <span class="tag tag-it">IT</span>
+                  <span class="tag tag-urgent">J-2</span>
+                </div>
+                <div class="ao-item-title">Acquisition matériel informatique — PMO PRECEL / MAERAH</div>
+                <div class="ao-item-meta">MAERAH · Réf. BF-PRECEL-471078 · Publié 07h34</div>
+              </div>
+              <div class="ao-item-right">
+                <div class="ao-item-date urgent">8 avr. 2026</div>
+                <button class="ao-save-btn saved" onclick="toggleSaveBtn(this);event.stopPropagation()" aria-label="Retirer des favoris">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="ao-item" onclick="showToast('Ouverture fiche AO ACOMOD...')">
+              <div class="ao-item-left">
+                <div class="ao-item-tags">
+                  <span class="tag tag-ouvert">Ouvert</span>
+                  <span class="tag tag-btp">BTP</span>
+                </div>
+                <div class="ao-item-title">Construction salles de classe supplémentaires — Bobo-Dioulasso</div>
+                <div class="ao-item-meta">ACOMOD-B · Réf. 2026-001/ACOMOD-B · Publié 07h34</div>
+              </div>
+              <div class="ao-item-right">
+                <div class="ao-item-date ok">25 avr. 2026</div>
+                <button class="ao-save-btn" onclick="toggleSaveBtn(this);event.stopPropagation()" aria-label="Enregistrer dans les favoris">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="ao-item" onclick="showToast('Ouverture fiche AO UNDP...')">
+              <div class="ao-item-left">
+                <div class="ao-item-tags">
+                  <span class="tag tag-ouvert">Ouvert</span>
+                  <span class="tag tag-sante">Santé</span>
+                  <span class="tag tag-new">UNDP</span>
+                </div>
+                <div class="ao-item-title">Acquisition produits médicaux santé sexuelle et reproductive</div>
+                <div class="ao-item-meta">UNDP BFA · Réf. UNDP-BFA-00665 · Publié 08h12</div>
+              </div>
+              <div class="ao-item-right">
+                <div class="ao-item-date ok">18 avr. 2026</div>
+                <button class="ao-save-btn" onclick="toggleSaveBtn(this);event.stopPropagation()" aria-label="Enregistrer dans les favoris">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="ao-item" onclick="showToast('Ouverture fiche AO MARAH...')">
+              <div class="ao-item-left">
+                <div class="ao-item-tags">
+                  <span class="tag tag-ouvert">Ouvert</span>
+                  <span class="tag tag-conseil">Conseil</span>
+                </div>
+                <div class="ao-item-title">Recrutement consultant audit externe annuel — PRSA-BF</div>
+                <div class="ao-item-meta">MARAH · Réf. 2026_001/PRSA-BF · Banque Mondiale</div>
+              </div>
+              <div class="ao-item-right">
+                <div class="ao-item-date ok">30 avr. 2026</div>
+                <button class="ao-save-btn" onclick="toggleSaveBtn(this);event.stopPropagation()" aria-label="Enregistrer dans les favoris">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="tab-favoris" style="display:none;">
+            <div class="ao-item" onclick="showToast('Ouverture AO favori...')">
+              <div class="ao-item-left">
+                <div class="ao-item-tags"><span class="tag tag-ouvert">Ouvert</span><span class="tag tag-it">IT</span></div>
+                <div class="ao-item-title">Fourniture matériel informatique — Université KI-ZERBO</div>
+                <div class="ao-item-meta">UJKZ · Publié 3 avr. 2026</div>
+              </div>
+              <div class="ao-item-right">
+                <div class="ao-item-date urgent">J-5</div>
+                <button class="ao-save-btn saved" onclick="toggleSaveBtn(this);event.stopPropagation()" aria-label="Retirer des favoris">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="ao-item" onclick="showToast('Ouverture AO favori...')">
+              <div class="ao-item-left">
+                <div class="ao-item-tags"><span class="tag tag-cloture">Clôturé</span><span class="tag tag-btp">BTP</span></div>
+                <div class="ao-item-title">Rehabilitation infrastructure — Direction Services Vétérinaires</div>
+                <div class="ao-item-meta">MAERAH · Réf. 2026-05T · Publié 2 avr. 2026</div>
+              </div>
+              <div class="ao-item-right">
+                <div class="ao-item-date ok">20 avr. 2026</div>
+                <button class="ao-save-btn saved" onclick="toggleSaveBtn(this);event.stopPropagation()" aria-label="Retirer des favoris">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <a class="view-all" href="#" onclick="showToast('Navigation : tous les AO...')">
+            Voir tous les appels d'offres →
+          </a>
+        </div>
+
+        <!-- Activité récente -->
+        <div class="activity-card">
+          <div class="section-header">
+            <div class="section-header-title">
+              <div class="section-header-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              Activité récente
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--blue-400);"></div>
+            <div class="activity-body">
+              <div class="activity-text">Alerte WhatsApp envoyée — <strong>AO PRECEL matériel IT</strong></div>
+              <div class="activity-time">Aujourd'hui 07h34</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--amber-400);"></div>
+            <div class="activity-body">
+              <div class="activity-text">Rappel clôture J-2 — <strong>Fournitures bureau MSHP</strong></div>
+              <div class="activity-time">Aujourd'hui 07h34</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--green-400);"></div>
+            <div class="activity-body">
+              <div class="activity-text">AO enregistré — <strong>Systeme informatique ARCOP</strong></div>
+              <div class="activity-time">Hier 14h22</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--blue-400);"></div>
+            <div class="activity-body">
+              <div class="activity-text">Alerte email envoyée — <strong>3 nouveaux AO secteur IT</strong></div>
+              <div class="activity-time">Hier 07h30</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--muted);"></div>
+            <div class="activity-body">
+              <div class="activity-text">Nouveau quotidien DGCMEF indexé — <strong>n°713</strong></div>
+              <div class="activity-time">Hier 07h12</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLONNE DROITE -->
+      <div class="right-col">
+
+        <!-- Alertes config -->
+        <div class="alert-config-card">
+          <div class="section-header">
+            <div class="section-header-title">
+              <div class="section-header-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+              </div>
+              Mes alertes actives
+            </div>
+            <a href="#" style="font-size:12px;color:var(--blue-500);text-decoration:none;" onclick="showToast('Configuration alertes...')">Gérer</a>
+          </div>
+          <div class="alert-row">
+            <div class="alert-row-icon" style="background:var(--blue-50);color:var(--blue-500);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+            <div class="alert-row-body">
+              <div class="alert-row-title">Informatique & Télécom</div>
+              <div class="alert-row-sub">Email + WhatsApp · DGCMEF + UNDP</div>
+            </div>
+            <div class="toggle on" onclick="toggleEl(this)" aria-label="Désactiver alerte informatique"><div class="toggle-thumb"></div></div>
+          </div>
+          <div class="alert-row">
+            <div class="alert-row-icon" style="background:var(--green-50);color:var(--green-400);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>
+            </div>
+            <div class="alert-row-body">
+              <div class="alert-row-title">BTP — toutes régions</div>
+              <div class="alert-row-sub">Email uniquement · DGCMEF</div>
+            </div>
+            <div class="toggle on" onclick="toggleEl(this)" aria-label="Désactiver alerte BTP"><div class="toggle-thumb"></div></div>
+          </div>
+          <div class="alert-row">
+            <div class="alert-row-icon" style="background:var(--amber-50);color:var(--amber-400);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            </div>
+            <div class="alert-row-body">
+              <div class="alert-row-title">Conseil & Expertise</div>
+              <div class="alert-row-sub">WhatsApp uniquement · Toutes sources</div>
+            </div>
+            <div class="toggle" onclick="toggleEl(this)" aria-label="Activer alerte conseil"><div class="toggle-thumb"></div></div>
+          </div>
+          <div class="alert-row">
+            <div class="alert-row-icon" style="background:var(--red-50);color:var(--red-400);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="alert-row-body">
+              <div class="alert-row-title">Rappel clôture J-3</div>
+              <div class="alert-row-sub">Tous secteurs · Email + WhatsApp</div>
+            </div>
+            <div class="toggle on" onclick="toggleEl(this)" aria-label="Désactiver rappel clôture"><div class="toggle-thumb"></div></div>
+          </div>
+          <a class="view-all" href="#" onclick="showToast('Ajout nouvelle alerte...')">
+            + Ajouter une alerte
+          </a>
+        </div>
+
+        <!-- Mini calendrier -->
+        <div class="calendar-card">
+          <div class="cal-header">
+            <div class="cal-title">Avril 2026</div>
+            <div class="cal-nav">
+              <button class="cal-nav-btn" aria-label="Mois précédent" onclick="showToast('Mois précédent')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="cal-nav-btn" aria-label="Mois suivant" onclick="showToast('Mois suivant')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="cal-grid">
+            <div class="cal-day-label">Lu</div><div class="cal-day-label">Ma</div><div class="cal-day-label">Me</div>
+            <div class="cal-day-label">Je</div><div class="cal-day-label">Ve</div><div class="cal-day-label">Sa</div><div class="cal-day-label">Di</div>
+            <div class="cal-day other-month">31</div>
+            <div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div>
+            <div class="cal-day has-ao">4</div><div class="cal-day">5</div><div class="cal-day">6</div>
+            <div class="cal-day today">6</div>
+            <div class="cal-day">7</div><div class="cal-day has-ao urgent">8</div><div class="cal-day">9</div>
+            <div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div>
+            <div class="cal-day">14</div><div class="cal-day">15</div><div class="cal-day">16</div>
+            <div class="cal-day has-ao">17</div><div class="cal-day has-ao urgent">18</div><div class="cal-day">19</div><div class="cal-day">20</div>
+            <div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day">23</div>
+            <div class="cal-day">24</div><div class="cal-day has-ao">25</div><div class="cal-day">26</div><div class="cal-day">27</div>
+            <div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day has-ao">30</div>
+          </div>
+          <div class="cal-legend">
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--amber-400);"></div>AO actifs</div>
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--red-400);"></div>Clôture urgente</div>
+          </div>
+        </div>
+
+        <!-- Upgrade card -->
+        <div class="upgrade-card">
+          <div class="upgrade-title">Passer au plan Equipe</div>
+          <div class="upgrade-desc">Gérez les AO en équipe. 5 comptes, dashboard partagé, historique 24 mois.</div>
+          <div class="upgrade-features">
+            <div class="upgrade-feat"><span class="upgrade-feat-check">✓</span> 5 comptes utilisateurs</div>
+            <div class="upgrade-feat"><span class="upgrade-feat-check">✓</span> Dashboard partagé</div>
+            <div class="upgrade-feat"><span class="upgrade-feat-check">✓</span> Suivi candidatures</div>
+          </div>
+          <button class="upgrade-btn" aria-label="Souscrire au plan Equipe" onclick="showToast('Redirection vers la page tarifs...')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="2"/></svg>
+            Voir le plan Equipe — 45 000 FCFA
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast hidden" id="toast"><span id="toast-msg">Action effectuée</span></div>
+
+<script>
+function showToast(msg, duration) {
+  duration = duration || 2500;
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function() { t.classList.add('hidden'); }, duration);
+}
+function toggleEl(el) {
+  el.classList.toggle('on');
+  const label = el.getAttribute('aria-label') || '';
+  const isOn = el.classList.contains('on');
+  el.setAttribute('aria-label', isOn ? label.replace('Activer','Désactiver') : label.replace('Désactiver','Activer'));
+  showToast(isOn ? 'Alerte activée' : 'Alerte désactivée');
+}
+function toggleSaveBtn(btn) {
+  const saved = btn.classList.toggle('saved');
+  const svg = btn.querySelector('svg');
+  svg.setAttribute('fill', saved ? 'currentColor' : 'none');
+  btn.setAttribute('aria-label', saved ? 'Retirer des favoris' : 'Enregistrer dans les favoris');
+  showToast(saved ? 'AO enregistré dans les favoris' : 'AO retiré des favoris');
+}
+function setTab(btn, tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-nouveaux').style.display = tab === 'nouveaux' ? '' : 'none';
+  document.getElementById('tab-favoris').style.display = tab === 'favoris' ? '' : 'none';
+}
+document.querySelectorAll('.cal-day:not(.cal-day-label):not(.other-month)').forEach(function(d) {
+  d.addEventListener('click', function() {
+    const txt = d.textContent.trim();
+    if (d.classList.contains('has-ao')) showToast('AO du ' + txt + ' avril 2026');
+  });
+  d.setAttribute('role','button');
+  d.setAttribute('tabindex','0');
+});
+</script>
+</body>
+</html>

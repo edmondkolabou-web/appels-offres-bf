@@ -1,0 +1,40 @@
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
+const routes = [
+  { path: '/auth', component: () => import('@/views/AuthView.vue'), meta: { guest: true } },
+  {
+    path: '/',
+    component: () => import('@/components/layout/AppLayout.vue'),
+    meta: { requiresAuth: true },
+    children: [
+      { path: '', redirect: '/dashboard' },
+      { path: 'dashboard', name: 'Dashboard', component: () => import('@/views/DashboardView.vue') },
+      { path: 'aos',       name: 'AOList',    component: () => import('@/views/AOListView.vue') },
+      { path: 'aos/:id',   name: 'AODetail',  component: () => import('@/views/AODetailView.vue'), props: true },
+      { path: 'favoris',   name: 'Favoris',   component: () => import('@/views/FavorisView.vue') },
+      { path: 'alertes',   name: 'Alertes',   component: () => import('@/views/AlertesView.vue') },
+      { path: 'pricing',   name: 'Pricing',   component: () => import('@/views/PricingView.vue') },
+      { path: 'profil',    name: 'Profil',    component: () => import('@/views/ProfilView.vue') },
+    ],
+  },
+  { path: '/:pathMatch(.*)*', redirect: '/' },
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+  scrollBehavior: () => ({ top: 0 }),
+})
+
+router.beforeEach((to) => {
+  const auth = useAuthStore()
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    return { path: '/auth', query: { redirect: to.fullPath } }
+  }
+  if (to.meta.guest && auth.isAuthenticated) {
+    return { path: '/dashboard' }
+  }
+})
+
+export default router

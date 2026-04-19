@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetSync Gov — Connexion / Inscription</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue-50:#E6F1FB;--blue-100:#B5D4F4;--blue-200:#85B7EB;--blue-300:#5BA8E8;
+  --blue-400:#378ADD;--blue-500:#0082C9;--blue-600:#006AA3;--blue-700:#005080;
+  --green-50:#EAF3DE;--green-400:#1D9E75;--green-600:#0F6E56;
+  --amber-50:#FAEEDA;--amber-400:#BA7517;--amber-600:#854F0B;
+  --red-50:#FCEBEB;--red-400:#E24B4A;--red-600:#A32D2D;
+  --ink:#0F1923;--ink-700:#2A3440;--ink-500:#4A5568;--muted:#64748B;
+  --border:#E2E8F0;--border-md:#CBD5E1;--surface:#F7F9FB;--surface-2:#EFF3F7;
+  --white:#FFFFFF;
+  --font-display:'DM Serif Display',serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius-sm:4px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px;--radius-full:9999px;
+  --shadow-sm:0 1px 3px rgba(15,25,35,.06);
+  --shadow-md:0 4px 12px rgba(15,25,35,.08);
+  --shadow-lg:0 16px 40px rgba(15,25,35,.12);
+  --shadow-blue:0 4px 16px rgba(0,130,201,.25);
+  --transition-fast:150ms ease;
+  --transition-base:200ms ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:14px;scroll-behavior:smooth;}
+body{font-family:var(--font-body);color:var(--ink);background:var(--surface);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;}
+
+/* ── PAGE LAYOUT ── */
+.page{display:grid;grid-template-columns:1fr 1fr;min-height:100vh;}
+
+/* ── LEFT PANEL — Branding ── */
+.left-panel{background:var(--ink);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:2.5rem;}
+.left-bg-pattern{position:absolute;inset:0;opacity:.04;background-image:radial-gradient(circle at 2px 2px, white 1px, transparent 0);background-size:32px 32px;}
+.left-gradient{position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to top, rgba(0,130,201,.15), transparent);}
+.left-top{position:relative;z-index:1;}
+.left-logo{display:flex;align-items:center;gap:10px;margin-bottom:3rem;}
+.left-logo-icon{width:40px;height:40px;background:var(--blue-500);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;}
+.left-logo-text{font-family:var(--font-display);font-size:1.25rem;color:var(--white);}
+.left-tagline{font-family:var(--font-display);font-size:2rem;color:var(--white);line-height:1.25;margin-bottom:1rem;}
+.left-tagline em{font-style:italic;color:var(--blue-300);}
+.left-sub{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;max-width:340px;}
+.left-middle{position:relative;z-index:1;}
+
+/* Stats mini dans le panel gauche */
+.left-stats{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:2.5rem;}
+.left-stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);/* surface-2 tone */border-radius:var(--radius-lg);padding:.875rem 1rem;}
+.left-stat-val{font-family:var(--font-display);font-size:1.6rem;color:var(--white);line-height:1;}
+.left-stat-label{font-size:11px;color:rgba(255,255,255,.4);margin-top:3px;line-height:1.4;}
+
+/* Testimonial */
+.left-bottom{position:relative;z-index:1;}
+.testimonial{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-xl);padding:1.25rem;}
+.testimonial-text{font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:.875rem;font-style:italic;}
+.testimonial-author{display:flex;align-items:center;gap:.75rem;}
+.testimonial-avatar{width:32px;height:32px;border-radius:50%;background:var(--blue-500);color:var(--white);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.testimonial-name{font-size:12px;font-weight:500;color:var(--white);}
+.testimonial-role{font-size:11px;color:rgba(255,255,255,.4);}
+
+/* ── RIGHT PANEL — Auth form ── */
+.right-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem;background:var(--white);}
+.auth-box{width:100%;max-width:420px;}
+.right-panel:hover .auth-box{filter:drop-shadow(0 0 0 transparent);}
+
+/* Tabs connexion/inscription */
+.auth-tabs{display:flex;background:var(--surface);border-radius:var(--radius-xl);padding:4px;margin-bottom:2rem;}
+.auth-tab{flex:1;padding:9px;text-align:center;font-size:13px;font-weight:500;border-radius:var(--radius-lg);cursor:pointer;border:none;background:none;color:var(--muted);transition:all var(--transition-base);}
+.auth-tab.active{background:var(--white);color:var(--ink);box-shadow:var(--shadow-sm);}
+
+/* Form */
+.form-title{font-family:var(--font-display);font-size:1.6rem;color:var(--ink);margin-bottom:.375rem;}
+.form-subtitle{font-size:13px;color:var(--muted);margin-bottom:1.75rem;line-height:1.5;}
+
+.form-group{margin-bottom:1rem;}
+.form-label{display:block;font-size:12px;font-weight:500;color:var(--ink-500);margin-bottom:5px;}
+.form-label .required{color:var(--red-400);margin-left:2px;}
+.form-input{width:100%;font-family:var(--font-body);font-size:13px;color:var(--ink);background:var(--white);border:1.5px solid var(--border-md);border-radius:var(--radius-md);padding:10px 12px;outline:none;transition:border-color var(--transition-fast),box-shadow var(--transition-fast);}
+.form-input:focus{border-color:var(--blue-500);box-shadow:0 0 0 3px rgba(0,130,201,.12);}
+.form-input::placeholder{color:var(--muted);}
+.form-input.error{border-color:var(--red-400);}
+.form-input.error:focus{box-shadow:0 0 0 3px rgba(226,75,74,.12);}
+.form-input.success{border-color:var(--green-400);}
+.form-hint{font-size:11px;margin-top:4px;}
+.form-hint.error-msg{color:var(--red-600);}
+.form-hint.success-msg{color:var(--green-600);}
+.form-hint.muted{color:var(--muted);}
+
+/* Input avec icône */
+.input-wrap{position:relative;}
+.input-icon-left{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.input-icon-right{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--muted);cursor:pointer;background:none;border:none;padding:2px;display:flex;align-items:center;}
+.input-icon-right:hover{color:var(--ink);}
+.has-icon-left .form-input{padding-left:36px;}
+.has-icon-right .form-input{padding-right:36px;}
+
+/* Password strength */
+.pw-strength{margin-top:6px;}
+.pw-strength-bars{display:flex;gap:4px;margin-bottom:4px;}
+.pw-bar{height:3px;flex:1;border-radius:2px;background:var(--border);transition:background var(--transition-base);}
+.pw-bar.weak{background:var(--red-400);}
+.pw-bar.medium{background:var(--amber-400);}
+.pw-bar.strong{background:var(--green-400);}
+.pw-strength-label{font-size:11px;color:var(--muted);}
+
+/* Plan selector */
+.plan-selector{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:1rem;}
+.plan-option{border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:.75rem .625rem;cursor:pointer;text-align:center;transition:all var(--transition-base);position:relative;}
+.plan-option:hover{border-color:var(--blue-200);background:var(--blue-50);}
+.plan-option.selected{border-color:var(--blue-500);background:var(--blue-50);box-shadow:var(--shadow-md);}
+.plan-option.popular::before{content:'Populaire';position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--blue-500);color:var(--white);font-size:9px;font-weight:600;padding:2px 8px;border-radius:var(--radius-full);white-space:nowrap;}
+.plan-option-name{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.plan-option-price{font-size:11px;color:var(--blue-500);font-weight:500;}
+.plan-option-price.free{color:var(--green-600);}
+
+/* Checkbox custom */
+.checkbox-wrap{display:flex;align-items:flex-start;gap:10px;cursor:pointer;}
+.checkbox-custom{width:16px;height:16px;border:1.5px solid var(--border-md);border-radius:var(--radius-sm);background:var(--white);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all var(--transition-fast);}
+.checkbox-custom.checked{background:var(--blue-500);border-color:var(--blue-500);}
+.checkbox-custom.checked svg{display:block;}
+.checkbox-custom svg{display:none;width:10px;height:10px;}
+.checkbox-label{font-size:12px;color:var(--muted);line-height:1.5;}
+.checkbox-label a{color:var(--blue-500);text-decoration:none;}
+.checkbox-label a:hover{text-decoration:underline;}
+
+/* Divider */
+.auth-divider{display:flex;align-items:center;gap:.75rem;margin:1.25rem 0;}
+.auth-divider-line{flex:1;height:1px;background:var(--border);}
+.auth-divider-text{font-size:11px;color:var(--muted);white-space:nowrap;}
+.forgot-hint{background:var(--amber-50);color:var(--amber-600);font-size:11px;padding:3px 8px;border-radius:var(--radius-sm);}
+
+/* Boutons */
+.btn-full{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-body);font-weight:500;border-radius:var(--radius-md);border:none;cursor:pointer;transition:all var(--transition-base);font-size:14px;padding:11px 20px;}
+.btn-full:active{transform:scale(.99);}
+.btn-submit{background:var(--blue-500);color:var(--white);box-shadow:var(--shadow-blue);}
+.btn-submit:hover{background:var(--blue-600);box-shadow:0 6px 20px rgba(0,130,201,.35);}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-google{background:var(--white);color:var(--ink-700);border:1.5px solid var(--border-md);}
+.btn-google:hover{background:var(--surface);border-color:var(--border);}
+
+/* Mobile Money badges */
+.mobile-money-row{display:flex;align-items:center;justify-content:center;gap:.625rem;margin-top:.875rem;}
+.mm-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:4px 10px;border-radius:var(--radius-full);border:1px solid var(--border);}
+.mm-badge-om{background:#FFF3E0;color:#E65100;border-color:#FFCCBC;}
+.mm-badge-mv{background:#E3F2FD;color:#1565C0;border-color:#BBDEFB;}
+.mm-badge-card{background:var(--surface-2);color:var(--muted);}
+.mm-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+/* Footer form */
+.auth-footer{margin-top:1.5rem;text-align:center;font-size:12px;color:var(--muted);}
+.auth-footer a{color:var(--blue-500);text-decoration:none;}
+.auth-footer a:hover{text-decoration:underline;}
+
+/* Loader spinner */
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Step indicator (pour inscription multi-étapes) */
+.steps-indicator{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:1.75rem;}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--border-md);transition:all var(--transition-base);}
+.step-dot.active{background:var(--blue-500);width:20px;border-radius:var(--radius-full);}
+.step-dot.done{background:var(--blue-400);}
+
+/* Alert inline */
+.alert-inline{display:flex;align-items:flex-start;gap:.625rem;padding:.75rem 1rem;border-radius:var(--radius-md);font-size:12px;margin-bottom:1rem;border:1px solid transparent;}
+.alert-inline-error{background:var(--red-50);border-color:#FCCACA;color:var(--red-600);}
+.alert-inline-success{background:var(--green-50);border-color:#B8DECA;color:var(--green-600);}
+.alert-inline-info{background:var(--blue-50);border-color:var(--blue-100);color:var(--blue-700);}
+
+/* Toast */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;background:var(--ink);color:var(--white);font-size:13px;font-weight:500;padding:12px 18px;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:8px;transition:opacity .3s,transform .3s;pointer-events:none;}
+.toast.hidden{opacity:0;transform:translateY(8px);}
+
+/* Responsive */
+@media(max-width:900px){
+  .page{grid-template-columns:1fr;}
+  .left-panel{display:none;}
+}
+@media(max-width:480px){
+  .right-panel{padding:1.5rem 1rem;}
+  .plan-selector{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ── LEFT PANEL ── -->
+  <div class="left-panel">
+    <div class="left-bg-pattern"></div>
+    <div class="left-gradient"></div>
+
+    <div class="left-top">
+      <div class="left-logo">
+        <div class="left-logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <span class="left-logo-text">NetSync Gov</span>
+      </div>
+      <h2 class="left-tagline">Ne rate plus<br>aucun <em>appel d'offres</em><br>au Burkina Faso</h2>
+      <p class="left-sub">Agrégation automatique du Quotidien DGCMEF chaque matin. Alertes WhatsApp + email dès la publication.</p>
+
+      <div class="left-stats">
+        <div class="left-stat">
+          <div class="left-stat-val">714+</div>
+          <div class="left-stat-label">Numéros du Quotidien DGCMEF indexés</div>
+        </div>
+        <div class="left-stat">
+          <div class="left-stat-val">07h00</div>
+          <div class="left-stat-label">Heure d'envoi de tes alertes chaque matin</div>
+        </div>
+        <div class="left-stat">
+          <div class="left-stat-val">0</div>
+          <div class="left-stat-label">Concurrent local avec alertes WhatsApp</div>
+        </div>
+        <div class="left-stat">
+          <div class="left-stat-val">15k</div>
+          <div class="left-stat-label">FCFA/mois pour un accès Pro complet</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="left-middle"></div>
+    <div class="left-bottom">
+      <div class="testimonial">
+        <p class="testimonial-text">"Depuis NetSync Gov, je reçois l'alerte WhatsApp avant même d'arriver au bureau. J'ai décroché 2 marchés supplémentaires en 3 mois."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">AK</div>
+          <div>
+            <div class="testimonial-name">Adama Kaboré</div>
+            <div class="testimonial-role">Gérant, Entreprise BTP — Ouagadougou</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT PANEL ── -->
+  <div class="right-panel">
+    <div class="auth-box">
+
+      <!-- Tabs -->
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" id="tab-login" role="tab" aria-selected="true" aria-controls="panel-login" onclick="switchTab('login')">Se connecter</button>
+        <button class="auth-tab" id="tab-register" role="tab" aria-selected="false" aria-controls="panel-register" onclick="switchTab('register')">Créer un compte</button>
+      </div>
+
+      <!-- ── CONNEXION ── -->
+      <div id="panel-login">
+        <h1 class="form-title">Bon retour 👋</h1>
+        <p class="form-subtitle">Connecte-toi pour accéder à tes alertes et tes AO enregistrés.</p>
+
+        <!-- Alerte erreur (conditionnelle) -->
+        <div class="alert-inline alert-inline-error" id="login-error" style="display:none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Email ou mot de passe incorrect. Réessaie.</span>
+        </div>
+
+        <form id="form-login" onsubmit="handleLogin(event)" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="login-email">Email<span class="required">*</span></label>
+            <div class="input-wrap has-icon-left">
+              <svg class="input-icon-left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <input class="form-input" type="email" id="login-email" name="email" placeholder="vous@entreprise.bf" autocomplete="email" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+              <label class="form-label" for="login-password" style="margin-bottom:0;">Mot de passe<span class="required">*</span></label>
+              <a href="#" class="forgot-hint" style="text-decoration:none;" onclick="showForgot()">Mot de passe oublié ?</a>
+            </div>
+            <div class="input-wrap has-icon-left has-icon-right">
+              <svg class="input-icon-left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <input class="form-input" type="password" id="login-password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+              <button type="button" class="input-icon-right" onclick="togglePw('login-password',this)" aria-label="Afficher le mot de passe">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:1.25rem;">
+            <div class="checkbox-wrap" onclick="toggleCheck('remember-check')">
+              <div class="checkbox-custom" id="remember-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="checkbox-label">Se souvenir de moi pendant 30 jours</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-full btn-submit" id="login-btn">
+            <div class="spinner" id="login-spinner"></div>
+            <span id="login-btn-text">Se connecter</span>
+          </button>
+        </form>
+
+        <div class="auth-divider">
+          <div class="auth-divider-line"></div>
+          <span class="auth-divider-text">ou continuer avec</span>
+          <div class="auth-divider-line"></div>
+        </div>
+
+        <button class="btn-full btn-google" aria-label="Se connecter avec Google" onclick="showToast('🔐 Connexion Google en cours…')">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Continuer avec Google
+        </button>
+
+        <div class="mobile-money-row">
+          <span style="font-size:11px;color:var(--muted);">Paiement accepté :</span>
+          <span class="mm-badge mm-badge-om"><span class="mm-dot"></span>Orange Money</span>
+          <span class="mm-badge mm-badge-mv"><span class="mm-dot"></span>Moov Money</span>
+          <span class="mm-badge mm-badge-card">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Carte
+          </span>
+        </div>
+      </div>
+
+      <!-- ── INSCRIPTION ── -->
+      <div id="panel-register" style="display:none;">
+
+        <!-- Steps -->
+        <div class="steps-indicator" aria-label="Étape 1 sur 3">
+          <div class="step-dot active" id="step-1"></div>
+          <div class="step-dot" id="step-2"></div>
+          <div class="step-dot" id="step-3"></div>
+        </div>
+
+        <!-- STEP 1 — Infos compte -->
+        <div id="register-step-1">
+          <h1 class="form-title">Créer ton compte</h1>
+          <p class="form-subtitle">Gratuit pour commencer. Pas de carte requise.</p>
+
+          <form id="form-register-1" onsubmit="goStep(2,event)" novalidate>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" for="reg-prenom">Prénom<span class="required">*</span></label>
+                <input class="form-input" type="text" id="reg-prenom" placeholder="Adama" autocomplete="given-name" required>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" for="reg-nom">Nom<span class="required">*</span></label>
+                <input class="form-input" type="text" id="reg-nom" placeholder="Kaboré" autocomplete="family-name" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-entreprise">Entreprise / Cabinet</label>
+              <div class="input-wrap has-icon-left">
+                <svg class="input-icon-left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+                <input class="form-input" type="text" id="reg-entreprise" placeholder="SARL BTP Ouaga" autocomplete="organization">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-email">Email<span class="required">*</span></label>
+              <div class="input-wrap has-icon-left">
+                <svg class="input-icon-left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <input class="form-input" type="email" id="reg-email" placeholder="vous@entreprise.bf" autocomplete="email" required oninput="validateEmail(this)">
+              </div>
+              <span class="form-hint error-msg" id="email-error" style="display:none;">Format invalide</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-whatsapp">Numéro WhatsApp</label>
+              <div class="input-wrap has-icon-left">
+                <svg class="input-icon-left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.77 1.22 2 2 0 012.81.05h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.91 7.91a16 16 0 006.29 6.29l.29-.29a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+                <input class="form-input" type="tel" id="reg-whatsapp" placeholder="+226 70 00 00 00" autocomplete="tel">
+              </div>
+              <span class="form-hint muted">Pour recevoir tes alertes AO sur WhatsApp</span>
+              <span class="form-hint success-msg" style="display:none;" id="whatsapp-ok">✓ Format valide</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-password">Mot de passe<span class="required">*</span></label>
+              <div class="input-wrap has-icon-left has-icon-right">
+                <svg class="input-icon-left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                <input class="form-input" type="password" id="reg-password" placeholder="8 caractères minimum" autocomplete="new-password" required oninput="checkPwStrength(this.value)">
+                <button type="button" class="input-icon-right" onclick="togglePw('reg-password',this)" aria-label="Afficher le mot de passe">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <div class="pw-strength">
+                <div class="pw-strength-bars">
+                  <div class="pw-bar" id="pw-bar-1"></div>
+                  <div class="pw-bar" id="pw-bar-2"></div>
+                  <div class="pw-bar" id="pw-bar-3"></div>
+                  <div class="pw-bar" id="pw-bar-4"></div>
+                </div>
+                <span class="pw-strength-label" id="pw-label">Entrez un mot de passe</span>
+              </div>
+            </div>
+
+            <div style="margin-bottom:1.25rem;">
+              <div class="checkbox-wrap" onclick="toggleCheck('terms-check')">
+                <div class="checkbox-custom" id="terms-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <span class="checkbox-label">J'accepte les <a href="#">conditions d'utilisation</a> et la <a href="#">politique de confidentialité</a></span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-full btn-submit" aria-label="Passer a l\'etape suivante">
+              Continuer →
+            </button>
+          </form>
+
+          <div class="auth-divider">
+            <div class="auth-divider-line"></div>
+            <span class="auth-divider-text">ou</span>
+            <div class="auth-divider-line"></div>
+          </div>
+          <button class="btn-full btn-google" aria-label="S\'inscrire avec Google" onclick="showToast('🔐 Inscription Google en cours…')">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            S'inscrire avec Google
+          </button>
+        </div>
+
+        <!-- STEP 2 — Choix du plan -->
+        <div id="register-step-2" style="display:none;">
+          <h1 class="form-title">Choisis ton plan</h1>
+          <p class="form-subtitle">Tu peux commencer gratuitement et upgrader quand tu veux.</p>
+
+          <div class="plan-selector" role="radiogroup" aria-label="Sélection du plan">
+            <div class="plan-option selected" onclick="selectPlan(this,'gratuit')" role="radio" aria-checked="true" tabindex="0">
+              <div class="plan-option-name">Gratuit</div>
+              <div class="plan-option-price free">0 FCFA</div>
+            </div>
+            <div class="plan-option popular" onclick="selectPlan(this,'pro')" role="radio" aria-checked="false" tabindex="0">
+              <div class="plan-option-name">Pro</div>
+              <div class="plan-option-price">15 000 FCFA</div>
+            </div>
+            <div class="plan-option" onclick="selectPlan(this,'equipe')" role="radio" aria-checked="false" tabindex="0">
+              <div class="plan-option-name">Équipe</div>
+              <div class="plan-option-price">45 000 FCFA</div>
+            </div>
+          </div>
+
+          <div class="alert-inline alert-inline-info" id="plan-info">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="plan-info-text">Plan Gratuit : 3 AO consultables par jour. Pas de carte requise.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-secteurs">Secteurs d'activité <span class="required">*</span></label>
+            <select class="form-input" id="reg-secteurs" multiple style="height:110px;padding:8px;">
+              <option value="it" selected>Informatique & Télécom</option>
+              <option value="btp">Bâtiment & Travaux Publics</option>
+              <option value="sante">Santé & Pharmacie</option>
+              <option value="agri">Agriculture & Élevage</option>
+              <option value="conseil">Conseil & Expertise</option>
+              <option value="energie">Énergie</option>
+              <option value="transport">Transport & Logistique</option>
+            </select>
+            <span class="form-hint muted">Ctrl+clic pour sélectionner plusieurs secteurs</span>
+          </div>
+
+          <div style="display:flex;gap:.75rem;margin-top:1rem;">
+            <button type="button" class="btn-full btn-google" style="flex:0 0 auto;width:auto;padding:11px 16px;" onclick="goStep(1,null)" aria-label="Retour étape 1">← Retour</button>
+            <button type="button" class="btn-full btn-submit" onclick="goStep(3,null)">Continuer →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 — Confirmation -->
+        <div id="register-step-3" style="display:none;text-align:center;">
+          <div style="width:64px;height:64px;background:var(--green-50);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green-400)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h1 class="form-title" style="text-align:center;">Compte créé ! 🎉</h1>
+          <p class="form-subtitle" style="text-align:center;margin-bottom:1.5rem;">Vérifie ta boite email pour activer ton compte. Ton premier AO arrive demain matin à 07h00.</p>
+
+          <div class="alert-inline alert-inline-success" style="text-align:left;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Email de confirmation envoyé à <strong id="confirm-email" style="font-family:var(--font-mono);font-size:12px;"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e2948d9791a2878c96908792908b9187cc8084">[email&#160;protected]</a></strong></span>
+          </div>
+
+          <button type="button" class="btn-full btn-submit" style="margin-top:1rem;" aria-label="Acceder au tableau de bord" onclick="showToast(\' Redirection vers le tableau de bord…')">
+            Accéder à mon tableau de bord →
+          </button>
+
+          <div class="auth-footer" style="margin-top:1rem;">
+            Pas reçu l'email ? <a href="#" onclick="showToast('📧 Email renvoyé !')">Renvoyer</a>
+          </div>
+        </div>
+
+      </div><!-- /panel-register -->
+
+      <!-- Footer -->
+      <div class="auth-footer">
+        <div id="footer-login">Pas encore de compte ? <a href="#" onclick="switchTab('register')">S'inscrire gratuitement →</a></div>
+        <div id="footer-register" style="display:none;">Déjà un compte ? <a href="#" onclick="switchTab('login')">Se connecter</a></div>
+      </div>
+
+    </div><!-- /auth-box -->
+  </div><!-- /right-panel -->
+
+</div><!-- /page -->
+
+<!-- TOAST -->
+<div class="toast hidden" id="toast">
+  <span id="toast-msg">Action effectuée</span>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function switchTab(tab) {
+  const isLogin = tab === 'login';
+  ['login','register'].forEach(p => {
+    const isP = p === tab;
+    document.getElementById('tab-'+p).classList.toggle('active', isP);
+    document.getElementById('tab-'+p).setAttribute('aria-selected', String(isP));
+    document.getElementById('panel-'+p).style.display = isP ? '' : 'none';
+    document.getElementById('footer-'+p).style.display = isP ? '' : 'none';
+  });
+}
+
+function handleLogin(e) {
+  e.preventDefault();
+  const btn = document.getElementById('login-btn');
+  const spinner = document.getElementById('login-spinner');
+  const txt = document.getElementById('login-btn-text');
+  const err = document.getElementById('login-error');
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  txt.textContent = 'Connexion...';
+  err.style.display = 'none';
+  setTimeout(() => {
+    spinner.style.display = 'none';
+    btn.disabled = false;
+    const email = document.getElementById('login-email').value;
+    if (email && email.includes('@')) {
+      txt.textContent = 'Se connecter';
+      showToast('Connexion reussie - redirection...');
+    } else {
+      txt.textContent = 'Se connecter';
+      err.style.display = 'flex';
+      document.getElementById('login-email').classList.add('error');
+    }
+  }, 1400);
+}
+
+function goStep(n, e) {
+  if (e) e.preventDefault();
+  [1,2,3].forEach(i => {
+    const el = document.getElementById('register-step-' + i);
+    const dot = document.getElementById('step-' + i);
+    if (el) el.style.display = i === n ? '' : 'none';
+    if (dot) {
+      dot.classList.remove('active','done');
+      if (i === n) dot.classList.add('active');
+      else if (i < n) dot.classList.add('done');
+    }
+  });
+  if (n === 3) {
+    const email = document.getElementById('reg-email').value || 'vous@entreprise.bf';
+    const el = document.getElementById('confirm-email');
+    if (el) el.textContent = email;
+  }
+}
+
+function togglePw(id, btn) {
+  const input = document.getElementById(id);
+  const isText = input.type === 'text';
+  input.type = isText ? 'password' : 'text';
+  btn.style.color = isText ? 'var(--muted)' : 'var(--blue-500)';
+}
+
+function checkPwStrength(val) {
+  const bars = [1,2,3,4].map(i => document.getElementById('pw-bar-' + i));
+  const label = document.getElementById('pw-label');
+  if (!bars[0] || !label) return;
+  bars.forEach(b => { b.className = 'pw-bar'; });
+  if (!val) { label.textContent = 'Entrez un mot de passe'; label.style.color = ''; return; }
+  let score = 0;
+  if (val.length >= 8) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  const cls = ['','weak','medium','medium','strong'];
+  const labels = ['','Trop court','Moyen','Bien','Fort'];
+  const colors = ['','var(--red-600)','var(--amber-600)','var(--amber-600)','var(--green-600)'];
+  for (let i = 0; i < score; i++) bars[i].classList.add(cls[score]);
+  label.textContent = labels[score];
+  label.style.color = colors[score];
+}
+
+function toggleCheck(id) {
+  document.getElementById(id).classList.toggle('checked');
+}
+
+const planInfo = {
+  gratuit: 'Plan Gratuit : 3 AO consultables par jour. Pas de carte requise.',
+  pro: 'Plan Pro : AO illimites + alertes WhatsApp & email. 15 000 FCFA/mois.',
+  equipe: 'Plan Equipe : 5 comptes + dashboard partage. 45 000 FCFA/mois.'
+};
+function selectPlan(el, plan) {
+  document.querySelectorAll('.plan-option').forEach(p => {
+    p.classList.remove('selected');
+    p.setAttribute('aria-checked','false');
+  });
+  el.classList.add('selected');
+  el.setAttribute('aria-checked','true');
+  const info = document.getElementById('plan-info-text');
+  if (info) info.textContent = planInfo[plan];
+}
+
+function showForgot() {
+  showToast('Lien de reinitialisation envoye sur votre email');
+}
+
+function validateEmail(input) {
+  const ok = /^[^@]+@[^@]+[.][^@]+$/.test(input.value);
+  input.classList.toggle('error', input.value.length > 0 && !ok);
+  input.classList.toggle('success', ok);
+  const errEl = document.getElementById('email-error');
+  if (errEl) errEl.style.display = (input.value && !ok) ? 'block' : 'none';
+}
+
+function showToast(msg, duration) {
+  duration = duration || 2500;
+  const t = document.getElementById('toast');
+  if (!t) return;
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function() { t.classList.add('hidden'); }, duration);
+}
+</script>
+</body>
+</html>

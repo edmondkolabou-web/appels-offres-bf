@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetSync Gov — Détail Appel d'offres</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue-50:#E6F1FB;--blue-100:#B5D4F4;--blue-200:#85B7EB;--blue-300:#5BA8E8;
+  --blue-400:#378ADD;--blue-500:#0082C9;--blue-600:#006AA3;--blue-700:#005080;
+  --green-50:#EAF3DE;--green-400:#1D9E75;--green-600:#0F6E56;
+  --amber-50:#FAEEDA;--amber-400:#BA7517;--amber-600:#854F0B;
+  --red-50:#FCEBEB;--red-400:#E24B4A;--red-600:#A32D2D;
+  --ink:#0F1923;--ink-700:#2A3440;--ink-500:#4A5568;--muted:#64748B;
+  --border:#E2E8F0;--border-md:#CBD5E1;
+  --surface:#F7F9FB;--surface-2:#EFF3F7;--white:#FFFFFF;
+  --font-display:'DM Serif Display',serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+  --radius-sm:4px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px;--radius-full:9999px;
+  --shadow-sm:0 1px 3px rgba(15,25,35,.06);
+  --shadow-md:0 4px 12px rgba(15,25,35,.08);
+  --shadow-blue:0 4px 16px rgba(0,130,201,.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:14px;scroll-behavior:smooth;}
+body{font-family:var(--font-body);color:var(--ink);background:var(--surface);-webkit-font-smoothing:antialiased;}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:58px;display:flex;align-items:center;padding:0 1.5rem;gap:1.5rem;}
+.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;font-family:var(--font-display);font-size:1.1rem;color:var(--blue-700);}
+.nav-logo-icon{width:32px;height:32px;background:var(--blue-500);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.nav-sep{width:1px;height:20px;background:var(--border);}
+.nav-links{display:flex;gap:1.25rem;flex:1;}
+.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;padding:4px 0;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-links a.active{color:var(--blue-500);border-bottom-color:var(--blue-500);}
+.nav-right{display:flex;align-items:center;gap:.75rem;margin-left:auto;}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--blue-50);color:var(--blue-600);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;}
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-weight:500;border-radius:var(--radius-md);border:none;cursor:pointer;text-decoration:none;transition:all .2s;white-space:nowrap;font-size:13px;}
+.btn-primary{background:var(--blue-500);color:var(--white);padding:8px 18px;box-shadow:var(--shadow-blue);}
+.btn-primary:hover{background:var(--blue-600);}
+.btn-ghost{background:var(--white);color:var(--ink);padding:7px 14px;border:1px solid var(--border-md);}
+.btn-ghost:hover{background:var(--surface);}
+.btn-success{background:var(--green-50);color:var(--green-600);padding:8px 18px;border:1px solid #B8DECA;}
+.btn-success:hover{background:#C8E6D4;}
+
+/* ── BREADCRUMB ── */
+.breadcrumb-wrap{padding:.875rem 1.5rem;background:var(--white);border-bottom:1px solid var(--border);}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);max-width:1100px;margin:0 auto;}
+.breadcrumb a{color:var(--blue-500);text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:var(--border-md);}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:1fr 320px;gap:1.5rem;max-width:1100px;margin:0 auto;padding:1.5rem;}
+
+/* ── MAIN ── */
+.main{}
+
+/* Hero section */
+.ao-hero{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.75rem;margin-bottom:1.25rem;}
+.ao-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1rem;}
+.ao-hero-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.875rem;}
+.ao-hero-title{font-family:var(--font-display);font-size:1.4rem;line-height:1.3;color:var(--ink);margin-bottom:.75rem;}
+.ao-hero-ref{font-family:var(--font-mono);font-size:12px;color:var(--muted);background:var(--surface-2);padding:4px 10px;border-radius:var(--radius-sm);display:inline-block;margin-bottom:1rem;}
+.ao-hero-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;padding-top:1rem;border-top:1px solid var(--border);}
+.ao-meta-item{}
+.ao-meta-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:4px;}
+.ao-meta-val{font-size:13px;font-weight:500;color:var(--ink);}
+.ao-meta-val.urgent{color:var(--red-600);}
+.ao-meta-val.ok{color:var(--green-600);}
+
+.ao-hero-actions{display:flex;gap:.5rem;flex-shrink:0;flex-wrap:wrap;}
+
+/* Tags */
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:3px 9px;border-radius:var(--radius-sm);text-transform:uppercase;letter-spacing:.04em;}
+.tag-ouvert{background:var(--green-50);color:var(--green-600);}
+.tag-it{background:#EDE9FE;color:#5B21B6;}
+.tag-btp{background:var(--blue-50);color:var(--blue-600);}
+.tag-conseil{background:var(--surface-2);color:var(--muted);border:1px solid var(--border);}
+.tag-sante{background:#FEF3C7;color:#92400E;}
+.source-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 9px;border-radius:var(--radius-sm);text-transform:uppercase;letter-spacing:.04em;background:var(--blue-50);color:var(--blue-600);}
+
+/* Countdown badge */
+.countdown{display:inline-flex;align-items:center;gap:6px;background:var(--red-50);border:1px solid #FCCACA;color:var(--red-600);font-size:12px;font-weight:600;padding:6px 12px;border-radius:var(--radius-full);}
+.countdown-dot{width:7px;height:7px;border-radius:50%;background:var(--red-400);animation:blink 1.2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Sections */
+.section-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.5rem;margin-bottom:1.25rem;transition:box-shadow .2s,border-color .2s;}
+.section-card:hover{box-shadow:var(--shadow-md);border-color:var(--blue-200);}
+.section-card-title{font-size:13px;font-weight:600;color:var(--blue-400);margin-bottom:1rem;display:flex;align-items:center;gap:8px;padding-bottom:.75rem;border-bottom:1px solid var(--border);}
+.section-card-title svg{color:var(--blue-500);}
+
+/* Description */
+.description-text{color:var(--ink-700);font-size:13px;color:var(--ink-500);line-height:1.8;}
+.description-text p{margin-bottom:.75rem;}
+.description-text p:last-child{margin-bottom:0;}
+
+/* Info grid */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:.875rem;}
+.info-row{display:flex;flex-direction:column;gap:3px;}
+.info-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
+.info-val{font-size:13px;color:var(--ink);}
+.info-val-mono{font-family:var(--font-mono);font-size:12px;color:var(--ink-500);}
+
+/* Conditions box */
+.condition-list{display:flex;flex-direction:column;gap:.5rem;}
+.condition-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--ink-500);line-height:1.5;}
+.condition-bullet{width:18px;height:18px;border-radius:50%;background:var(--blue-50);color:var(--blue-500);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* Documents table */
+.docs-table{width:100%;border-collapse:collapse;}
+.docs-table th{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:6px 8px;text-align:left;border-bottom:1px solid var(--border);}
+.docs-table td{font-size:13px;padding:10px 8px;border-bottom:1px solid var(--border);color:var(--ink-500);vertical-align:middle;}
+.docs-table tr:last-child td{border-bottom:none;}
+.docs-table tr:hover td{background:var(--surface);}
+.doc-name{display:flex;align-items:center;gap:8px;color:var(--ink);}
+.doc-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.doc-icon-pdf{background:var(--red-50);color:var(--red-600);}
+.doc-icon-zip{background:var(--amber-50);color:var(--amber-600);}
+.doc-dl-btn{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;color:var(--blue-500);background:var(--blue-50);padding:4px 10px;border-radius:var(--radius-md);border:none;cursor:pointer;transition:background .15s;}
+.doc-dl-btn:hover{background:var(--blue-100);}
+
+/* Timeline */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.timeline-item{display:flex;gap:1rem;position:relative;}
+.timeline-item:not(:last-child)::before{content:'';position:absolute;left:15px;top:32px;bottom:-8px;width:1px;background:var(--border);}
+.timeline-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;}
+.dot-done{background:var(--green-50);border:2px solid var(--green-400);}
+.dot-active{background:var(--blue-500);border:2px solid var(--blue-500);}
+.dot-pending{background:var(--white);border:2px solid var(--border-md);}
+.timeline-body{padding-bottom:1.25rem;flex:1;}
+.timeline-title{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:2px;}
+.timeline-date{font-size:12px;color:var(--muted);}
+.timeline-active-badge{font-size:10px;font-weight:600;background:var(--blue-500);color:var(--white);padding:1px 7px;border-radius:var(--radius-full);margin-left:6px;}
+
+/* ── SIDEBAR ── */
+.sidebar{display:flex;flex-direction:column;gap:1rem;}
+
+/* Deadline card */
+.deadline-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.25rem;text-align:center;}
+.deadline-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.5rem;}
+.deadline-date{font-family:var(--font-display);font-size:1.5rem;color:var(--red-600);margin-bottom:.25rem;}
+.deadline-remaining{font-size:13px;font-weight:500;color:var(--red-600);margin-bottom:1rem;}
+.deadline-progress{height:6px;background:var(--border);border-radius:var(--radius-full);overflow:hidden;margin-bottom:.5rem;}
+.deadline-progress-bar{height:100%;background:var(--red-400);border-radius:var(--radius-full);width:85%;}
+.deadline-hint{font-size:11px;color:var(--muted);}
+
+/* Action card */
+.action-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.25rem;}
+.action-card-title{font-size:13px;font-weight:600;margin-bottom:1rem;}
+.action-btn-full{width:100%;padding:10px;border-radius:var(--radius-md);font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:.5rem;}
+.action-btn-primary{background:var(--blue-500);color:var(--white);box-shadow:var(--shadow-blue);}
+.action-btn-primary:focus{outline:2px solid var(--blue-300);outline-offset:2px;}
+.action-btn-primary:hover{background:var(--blue-600);}
+.action-btn-secondary{background:var(--blue-50);color:var(--blue-600);border:1px solid var(--blue-100);}
+.action-btn-secondary:hover{background:var(--blue-100);}
+.action-btn-ghost{background:var(--white);color:var(--ink);border:1px solid var(--border-md);}
+.action-btn-ghost:hover{background:var(--surface);}
+.action-divider{height:1px;background:var(--border);margin:.75rem 0;}
+.action-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:.5rem;line-height:1.5;}
+
+/* Alerte config card */
+.alert-config-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.25rem;}
+.alert-config-title{font-size:13px;font-weight:600;margin-bottom:.75rem;display:flex;align-items:center;gap:6px;}
+.alert-config-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.alert-config-row:last-of-type{border-bottom:none;}
+.toggle{width:34px;height:20px;border-radius:var(--radius-full);background:var(--border-md);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.toggle.on{background:var(--blue-500);}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--white);transition:left .2s;box-shadow:var(--shadow-sm);}
+.toggle.on .toggle-thumb{left:16px;}
+
+/* AO similaires */
+.similar-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.25rem;}
+.similar-title{font-size:13px;font-weight:600;margin-bottom:.875rem;}
+.similar-item{padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:padding-left .15s;}
+.similar-item:last-child{border-bottom:none;}
+.similar-item:hover{padding-left:4px;}
+.similar-item-title{font-size:12px;font-weight:500;color:var(--ink);line-height:1.4;margin-bottom:3px;}
+.similar-item-meta{font-size:11px;color:var(--muted);}
+.similar-item-date{font-size:11px;font-weight:500;color:var(--red-600);}
+
+/* Toast */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;background:var(--ink);color:var(--white);font-size:13px;font-weight:500;padding:12px 18px;border-radius:var(--radius-lg);box-shadow:0 8px 24px rgba(0,0,0,.2);display:flex;align-items:center;gap:8px;transition:opacity .3s,transform .3s;pointer-events:none;}
+.toast.hidden{opacity:0;transform:translateY(8px);}
+
+/* Freemium overlay */
+.freemium-overlay{position:relative;}
+.freemium-blur{filter:blur(4px);pointer-events:none;user-select:none;}
+.freemium-gate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(247,249,251,.85);border-radius:var(--radius-xl);text-align:center;padding:1.5rem;}
+.freemium-gate-icon{font-size:2rem;margin-bottom:.5rem;}
+.freemium-gate-title{font-size:14px;font-weight:600;margin-bottom:.4rem;}
+.freemium-gate-desc{font-size:12px;color:var(--muted);margin-bottom:1rem;line-height:1.5;}
+
+/* Responsive */
+@media(max-width:860px){
+  .layout{grid-template-columns:1fr;}
+  .sidebar{order:-1;}
+  .ao-hero-meta{grid-template-columns:1fr 1fr;}
+  .info-grid{grid-template-columns:1fr;}
+  .ao-hero-top{flex-direction:column;}
+  .ao-hero-actions{width:100%;}
+}
+
+@media(max-width:600px){
+  .ao-hero-top{flex-direction:column;}
+  .ao-hero-actions{flex-direction:column;}
+  .info-grid{grid-template-columns:1fr;}
+  .countdown{min-width:unset;width:100%;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo" aria-label="Accueil NetSync Gov">
+    <div class="nav-logo-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    </div>
+    NetSync Gov
+  </a>
+  <div class="nav-sep"></div>
+  <nav class="nav-links" aria-label="Navigation principale">
+    <a href="#">Appels d'offres</a>
+    <a href="#">Mes alertes</a>
+    <a href="#">Calendrier</a>
+    <a href="#">Statistiques</a>
+  </nav>
+  <div class="nav-right">
+    <button class="btn btn-ghost" aria-label="Notifications alertes">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      Alertes
+    </button>
+    <div class="nav-user" style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+      <div class="avatar" aria-hidden="true">EK</div>
+      <span>Edmond K.</span>
+    </div>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb-wrap">
+  <nav class="breadcrumb" aria-label="Fil d'ariane">
+    <a href="#">Accueil</a>
+    <span class="breadcrumb-sep" aria-hidden="true">/</span>
+    <a href="#">Appels d'offres</a>
+    <span class="breadcrumb-sep" aria-hidden="true">/</span>
+    <a href="#">Informatique</a>
+    <span class="breadcrumb-sep" aria-hidden="true">/</span>
+    <span aria-current="page">Acquisition matériel informatique PRECEL</span>
+  </nav>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- MAIN CONTENT -->
+  <main class="main" id="main-content">
+
+    <!-- Hero AO -->
+    <div class="ao-hero">
+      <div class="ao-hero-top">
+        <div style="flex:1;">
+          <div class="ao-hero-tags">
+            <span class="tag tag-ouvert">Ouvert</span>
+            <span class="tag tag-conseil">Informatique</span>
+            <span class="source-badge">DGCMEF · N°714</span>
+            <span class="countdown" role="timer" aria-label="Clôture dans 2 jours">
+              <span class="countdown-dot" aria-hidden="true"></span>
+              Clôture dans 2 jours
+            </span>
+          </div>
+          <h1 class="ao-hero-title">Acquisition de matériel informatique pour les PMO du Projet de Résilience et de Compétitivité Agricole (PRECEL)</h1>
+          <div class="ao-hero-ref" aria-label="Référence de l'appel d'offres">Réf. BF-PRECEL-471078-GO-RFQ</div>
+        </div>
+        <div class="ao-hero-actions">
+          <button class="btn btn-ghost" id="save-btn" onclick="toggleSave()" aria-label="Enregistrer cet appel d'offres">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+            Enregistrer
+          </button>
+          <button class="btn btn-ghost" onclick="shareAO()" aria-label="Partager cet appel d'offres">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Partager
+          </button>
+        </div>
+      </div>
+
+      <div class="ao-hero-meta" role="list" aria-label="Informations clés de l'appel d'offres">
+        <div class="ao-meta-item" role="listitem">
+          <div class="ao-meta-label">Autorité contractante</div>
+          <div class="ao-meta-val">MAERAH / SG / PRECEL</div>
+        </div>
+        <div class="ao-meta-item" role="listitem">
+          <div class="ao-meta-label">Type de procédure</div>
+          <div class="ao-meta-val">Demande de cotation (RFQ)</div>
+        </div>
+        <div class="ao-meta-item" role="listitem">
+          <div class="ao-meta-label">Date de publication</div>
+          <div class="ao-meta-val">4 avril 2026</div>
+        </div>
+        <div class="ao-meta-item" role="listitem">
+          <div class="ao-meta-label">Date de clôture</div>
+          <div class="ao-meta-val urgent" aria-label="Date de clôture urgente : 8 avril 2026">8 avril 2026 ⚡</div>
+        </div>
+        <div class="ao-meta-item" role="listitem">
+          <div class="ao-meta-label">Financement</div>
+          <div class="ao-meta-val">Banque Mondiale — Crédit IDA 7308-BF</div>
+        </div>
+        <div class="ao-meta-item" role="listitem">
+          <div class="ao-meta-label">Référence STEP</div>
+          <div class="ao-meta-val" style="font-family:var(--font-mono);font-size:12px;">BF-PRECEL-471078-GO-RFQ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="section-card">
+      <div class="section-card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Description du marché
+      </div>
+      <div class="description-text" aria-label="Description du marché">
+        <p>Dans le cadre de la mise en œuvre du Projet de Résilience et de Compétitivité Agricole (PRECEL), le Ministère de l'Agriculture, de l'Eau, des Ressources Animales et Halieutiques (MAERAH) lance une demande de cotation pour l'acquisition de matériel informatique destiné aux Points de Management Opérationnel (PMO) du projet.</p>
+        <p>Ce marché concerne la fourniture, la livraison et la mise en service de matériel informatique complet incluant des ordinateurs portables, des imprimantes multifonctions, des vidéoprojecteurs et des équipements réseau, dans le cadre du renforcement des capacités de gestion du projet.</p>
+        <p>Les équipements devront être livrés dans les locaux du PRECEL à Ouagadougou et dans les antennes régionales désignées, avec une garantie minimale de 24 mois et un service après-vente assuré sur le territoire burkinabè.</p>
+      </div>
+    </div>
+
+    <!-- Informations détaillées -->
+    <div class="section-card">
+      <div class="section-card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Informations détaillées
+      </div>
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">Pays</span>
+          <span class="info-val">Burkina Faso</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Région / Lieu de livraison</span>
+          <span class="info-val">Ouagadougou + antennes régionales</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Secteur</span>
+          <span class="info-val">Informatique & Équipement</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Source de financement</span>
+          <span class="info-val">IDA — Association Internationale de Développement</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">N° Accord de crédit</span>
+          <span class="info-val info-val-mono">7308-BF du 29 mai 2023</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Montant estimé</span>
+          <span class="info-val">Non communiqué</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Durée du contrat</span>
+          <span class="info-val">Livraison unique + garantie 24 mois</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Langue du dossier</span>
+          <span class="info-val">Français</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conditions de participation -->
+    <div class="section-card">
+      <div class="section-card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Conditions de participation
+      </div>
+      <div class="condition-list" aria-label="Liste des conditions de participation">
+        <div class="condition-item">
+          <span class="condition-bullet" aria-hidden="true">1</span>
+          Être une entreprise légalement constituée au Burkina Faso ou dans un pays membre de la Banque Mondiale
+        </div>
+        <div class="condition-item">
+          <span class="condition-bullet" aria-hidden="true">2</span>
+          Fournir une attestation de situation fiscale (ASF) valide — obtenir via SECOP (secop.finances.bf)
+        </div>
+        <div class="condition-item">
+          <span class="condition-bullet" aria-hidden="true">3</span>
+          Fournir une attestation de situation cotisante CNSS en cours de validité
+        </div>
+        <div class="condition-item">
+          <span class="condition-bullet" aria-hidden="true">4</span>
+          Justifier d'une expérience dans la fourniture de matériel informatique similaire (références de marchés antérieurs)
+        </div>
+        <div class="condition-item">
+          <span class="condition-bullet" aria-hidden="true">5</span>
+          Disposer d'un service après-vente opérationnel au Burkina Faso avec techniciens qualifiés
+        </div>
+        <div class="condition-item">
+          <span class="condition-bullet" aria-hidden="true">6</span>
+          Soumettre une offre technique et financière complète avant la date de clôture
+        </div>
+      </div>
+    </div>
+
+    <!-- Documents à télécharger -->
+    <div class="section-card">
+      <div class="section-card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Documents
+      </div>
+      <div class="freemium-overlay">
+        <table class="docs-table" aria-label="Documents téléchargeables">
+          <thead>
+            <tr>
+              <th scope="col">Document</th>
+              <th scope="col">Type</th>
+              <th scope="col">Taille</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="doc-name">
+                  <div class="doc-icon doc-icon-pdf" aria-hidden="true">PDF</div>
+                  Quotidien N°714 — Dossier complet
+                </div>
+              </td>
+              <td>PDF officiel DGCMEF</td>
+              <td>1.2 Mo</td>
+              <td><button class="doc-dl-btn" onclick="downloadDoc('quotidien-714.pdf')" aria-label="Télécharger le Quotidien N°714">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Télécharger
+              </button></td>
+            </tr>
+            <tr class="freemium-blur">
+              <td>
+                <div class="doc-name">
+                  <div class="doc-icon doc-icon-pdf" aria-hidden="true">PDF</div>
+                  Dossier de cotation complet
+                </div>
+              </td>
+              <td>PDF — Dossier officiel</td>
+              <td>3.4 Mo</td>
+              <td><button class="doc-dl-btn" disabled aria-label="Téléchargement réservé aux abonnés Pro">🔒 Pro</button></td>
+            </tr>
+            <tr class="freemium-blur">
+              <td>
+                <div class="doc-name">
+                  <div class="doc-icon doc-icon-zip" aria-hidden="true">ZIP</div>
+                  Spécifications techniques
+                </div>
+              </td>
+              <td>ZIP — Specs + annexes</td>
+              <td>8.1 Mo</td>
+              <td><button class="doc-dl-btn" disabled aria-label="Téléchargement réservé aux abonnés Pro">🔒 Pro</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="freemium-gate" role="complementary" aria-label="Accès restreint aux abonnés Pro">
+          <div class="freemium-gate-icon" aria-hidden="true">🔒</div>
+          <div class="freemium-gate-title">Dossiers complets réservés au plan Pro</div>
+          <div class="freemium-gate-desc">Accède à tous les documents officiels + alertes WhatsApp dès 15 000 FCFA/mois</div>
+          <button class="btn btn-primary" onclick="showToast('Redirection vers la page pricing…')" aria-label="Passer au plan Pro pour accéder aux documents">Passer au plan Pro →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chronologie -->
+    <div class="section-card">
+      <div class="section-card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Chronologie du marché
+      </div>
+      <div class="timeline" role="list" aria-label="Étapes du marché">
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-dot dot-done" aria-label="Étape complétée">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green-400)" stroke-width="3" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="timeline-body">
+            <div class="timeline-title">Publication de l'avis</div>
+            <div class="timeline-date">4 avril 2026 — Quotidien DGCMEF N°714</div>
+          </div>
+        </div>
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-dot dot-active" aria-label="Étape en cours">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="white" aria-hidden="true"><circle cx="12" cy="12" r="6"/></svg>
+          </div>
+          <div class="timeline-body">
+            <div class="timeline-title">
+              Période de soumission
+              <span class="timeline-active-badge" aria-label="Phase actuelle">En cours</span>
+            </div>
+            <div class="timeline-date">Du 4 au 8 avril 2026</div>
+          </div>
+        </div>
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-dot dot-pending" aria-label="Étape à venir">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--border-md)" aria-hidden="true"><circle cx="12" cy="12" r="6"/></svg>
+          </div>
+          <div class="timeline-body">
+            <div class="timeline-title" style="color:var(--muted);">Dépouillement des offres</div>
+            <div class="timeline-date">9 avril 2026</div>
+          </div>
+        </div>
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-dot dot-pending" aria-label="Étape à venir">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--border-md)" aria-hidden="true"><circle cx="12" cy="12" r="6"/></svg>
+          </div>
+          <div class="timeline-body">
+            <div class="timeline-title" style="color:var(--muted);">Publication des résultats provisoires</div>
+            <div class="timeline-date">Estimé : mi-avril 2026</div>
+          </div>
+        </div>
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-dot dot-pending" aria-label="Étape à venir">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--border-md)" aria-hidden="true"><circle cx="12" cy="12" r="6"/></svg>
+          </div>
+          <div class="timeline-body" style="padding-bottom:0;">
+            <div class="timeline-title" style="color:var(--muted);">Attribution définitive du marché</div>
+            <div class="timeline-date">Estimé : fin avril 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" aria-label="Actions et informations complémentaires">
+
+    <!-- Deadline -->
+    <div class="deadline-card" role="complementary" aria-label="Délai de clôture">
+      <div class="deadline-label">Date limite de dépôt</div>
+      <div class="deadline-date" aria-label="8 avril 2026">8 avr. 2026</div>
+      <div class="deadline-remaining" aria-label="Il reste 2 jours">⚡ Il reste 2 jours</div>
+      <div class="deadline-progress" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" aria-label="85% du délai écoulé">
+        <div class="deadline-progress-bar"></div>
+      </div>
+      <div class="deadline-hint">85% du délai de soumission écoulé</div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-card">
+      <div class="action-card-title">Actions</div>
+      <button class="action-btn-full action-btn-primary btn-success" onclick="downloadDoc('quotidien-714.pdf')" aria-label="Télécharger le dossier officiel PDF">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Télécharger le dossier
+      </button>
+      <button class="action-btn-full action-btn-secondary" onclick="toggleSave()" id="save-btn-sidebar" aria-label="Enregistrer dans vos favoris">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+        Enregistrer l'AO
+      </button>
+      <button class="action-btn-full action-btn-ghost" onclick="shareAO()" aria-label="Partager cet appel d'offres">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Partager
+      </button>
+      <div class="action-divider"></div>
+      <button class="action-btn-full" style="background:var(--green-50);color:var(--green-600);border:1px solid #B8DECA;border-radius:var(--radius-md);font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;" onclick="showToast('✓ AO ajouté au suivi de candidature')" aria-label="Marquer comme candidature en cours">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Marquer comme candidat
+      </button>
+      <div class="action-hint">
+        Ton dossier sera suivi dans le tableau de bord équipe
+      </div>
+    </div>
+
+    <!-- Alertes config -->
+    <div class="alert-config-card" role="complementary" aria-label="Configuration des alertes">
+      <div class="alert-config-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue-500)" stroke-width="2" aria-hidden="true"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+        Mes alertes pour cet AO
+      </div>
+      <div class="alert-config-row">
+        <span>Alerte J-3 clôture</span>
+        <div class="toggle on" onclick="toggleAlert(this)" role="switch" aria-checked="true" aria-label="Alerte J-3 clôture activée" tabindex="0">
+          <div class="toggle-thumb"></div>
+        </div>
+      </div>
+      <div class="alert-config-row">
+        <span>Résultats provisoires</span>
+        <div class="toggle" onclick="toggleAlert(this)" role="switch" aria-checked="false" aria-label="Alerte résultats provisoires désactivée" tabindex="0">
+          <div class="toggle-thumb"></div>
+        </div>
+      </div>
+      <div class="alert-config-row">
+        <span>Attribution définitive</span>
+        <div class="toggle on" onclick="toggleAlert(this)" role="switch" aria-checked="true" aria-label="Alerte attribution définitive activée" tabindex="0">
+          <div class="toggle-thumb"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AO similaires -->
+    <div class="similar-card" role="complementary" aria-label="Appels d'offres similaires">
+      <div class="similar-title">AO similaires</div>
+
+      <div class="similar-item" onclick="showToast('Ouverture de l\'AO similaire…')" role="button" tabindex="0" aria-label="Voir l'AO : Fourniture matériel informatique EPO">
+        <div class="similar-item-title">Fourniture matériel informatique pour l'École Polytechnique de Ouagadougou</div>
+        <div class="similar-item-meta" style="display:flex;justify-content:space-between;margin-top:3px;">
+          <span>MESRI / EPO</span>
+          <span class="similar-item-date">Clôture : 26 avr.</span>
+        </div>
+      </div>
+
+      <div class="similar-item" onclick="showToast('Ouverture de l\'AO similaire…')" role="button" tabindex="0" aria-label="Voir l'AO : Acquisition équipements ANPE">
+        <div class="similar-item-title">Acquisition d'équipements informatiques pour les directions régionales de l'ANPE</div>
+        <div class="similar-item-meta" style="display:flex;justify-content:space-between;margin-top:3px;">
+          <span>ANPE / DG</span>
+          <span class="similar-item-date">Clôture : 2 mai</span>
+        </div>
+      </div>
+
+      <div class="similar-item" onclick="showToast('Ouverture de l\'AO similaire…')" role="button" tabindex="0" aria-label="Voir l'AO : Fourniture vidéoprojecteurs universités">
+        <div class="similar-item-title">Fourniture de vidéoprojecteurs et écrans pour les centres universitaires</div>
+        <div class="similar-item-meta" style="display:flex;justify-content:space-between;margin-top:3px;">
+          <span>UJKZ / SG</span>
+          <span class="similar-item-date" style="color:var(--muted);">Clôturé</span>
+        </div>
+      </div>
+
+    </div>
+
+  </aside>
+
+</div><!-- /layout -->
+
+<!-- Toast -->
+<div class="toast hidden" id="toast" role="status" aria-live="polite" aria-atomic="true">
+  <span aria-hidden="true">✓</span>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+let isSaved = false;
+
+function toggleSave() {
+  isSaved = !isSaved;
+  const btns = [document.getElementById('save-btn'), document.getElementById('save-btn-sidebar')];
+  btns.forEach(btn => {
+    if (!btn) return;
+    const svg = btn.querySelector('svg');
+    if (isSaved) {
+      svg.setAttribute('fill', 'currentColor');
+      btn.style.color = 'var(--amber-400)';
+      btn.style.borderColor = 'var(--amber-400)';
+    } else {
+      svg.setAttribute('fill', 'none');
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }
+  });
+  showToast(isSaved ? '✓ AO enregistré dans vos favoris' : 'AO retiré des favoris');
+}
+
+function shareAO() {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      showToast('✓ Lien copié dans le presse-papiers');
+    });
+  } else {
+    showToast('✓ Lien copié dans le presse-papiers');
+  }
+}
+
+function downloadDoc(filename) {
+  showToast('📄 Téléchargement de ' + filename + ' en cours…');
+}
+
+function toggleAlert(el) {
+  el.classList.toggle('on');
+  const isOn = el.classList.contains('on');
+  el.setAttribute('aria-checked', isOn.toString());
+  showToast(isOn ? '✓ Alerte activée' : 'Alerte désactivée');
+}
+
+function showToast(msg, duration = 2800) {
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toast-msg');
+  m.textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.add('hidden'), duration);
+}
+
+// Keyboard accessibility for similar items and toggles
+document.querySelectorAll('.similar-item[role="button"]').forEach(el => {
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
+  });
+});
+document.querySelectorAll('.toggle[role="switch"]').forEach(el => {
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
+  });
+});
+</script>
+</body>
+</html>
