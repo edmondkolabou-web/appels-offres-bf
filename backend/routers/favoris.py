@@ -27,7 +27,7 @@ def list_favoris(
     return [FavoriOut.model_validate(f)
             for f in db.query(Favori)
                        .filter(Favori.abonne_id == current.id)
-                       .order_by(Favori.cree_le.desc())
+                       .order_by(Favori.created_at.desc())
                        .all()]
 
 

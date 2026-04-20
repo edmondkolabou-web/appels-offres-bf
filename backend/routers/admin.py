@@ -51,7 +51,7 @@ def get_pipeline_logs(
     """Historique des runs du pipeline PDF avec statistiques."""
     logs = (
         db.query(PipelineLog)
-        .order_by(PipelineLog.run_at.desc())
+        .order_by(PipelineLog.created_at.desc())
         .limit(limit)
         .all()
     )
@@ -76,7 +76,7 @@ def get_stats(
     abonnes_pro   = (db.query(func.count(Abonne.id))
                       .filter(Abonne.plan.in_(["pro", "equipe"])).scalar() or 0)
     alertes_7j    = (db.query(func.count(EnvoiAlerte.id))
-                      .filter(EnvoiAlerte.envoye_le >= sept_jours,
+                      .filter(EnvoiAlerte.created_at >= sept_jours,
                               EnvoiAlerte.statut == "envoye").scalar() or 0)
 
     return StatsOut(
