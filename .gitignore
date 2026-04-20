@@ -37,3 +37,4 @@ Thumbs.db
 
 # PDFs téléchargés
 pipeline/data/pdfs/
+pipeline/data/pdfs/*.pdf
