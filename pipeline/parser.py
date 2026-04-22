@@ -87,49 +87,58 @@ class PDFExtractor:
     def split_into_blocks(self, full_text: str) -> List[str]:
         """
         Découpe le texte brut en blocs correspondant à chaque AO.
-
-        Le Quotidien DGCMEF sépare les AO par des tirets ou des blocs
-        de majuscules qui commencent par "AVIS D'APPEL D'OFFRES",
-        "AVIS DE DEMANDE DE PRIX", "AVIS DE MANIFESTATION", etc.
-
-        Returns:
-            Liste de blocs de texte, un par AO.
+        Adapté au format réel du Quotidien DGCMEF extrait par pdfplumber.
         """
-        # Séparateurs courants dans le Quotidien DGCMEF
-        separateurs = [
-            r"(?m)^(?:AVIS\s+D['']APPEL\s+D['']OFFRES)",
-            r"(?m)^(?:AVIS\s+DE\s+DEMANDE\s+DE\s+(?:PRIX|COTATION))",
-            r"(?m)^(?:AVIS\s+DE\s+MANIFESTATION\s+D['']INT[EÉ]R[EÊ]T)",
-            r"(?m)^(?:AVIS\s+DE\s+(?:S[EÉ]LECTION|RECRUTEMENT))",
-            r"(?m)^(?:DEMANDE\s+DE\s+PROPOSITIONS?)",
-            r"(?m)^(?:REQUEST\s+FOR\s+(?:PROPOSAL|QUOTATION))",
-            r"(?m)^-{20,}",  # Ligne de tirets
-            r"(?m)^\*{10,}",  # Ligne d'astérisques
-        ]
+        pages = re.split(r'--- PAGE \d+ ---', full_text)
 
-        pattern = "|".join(separateurs)
-        # Découper en gardant le séparateur au début de chaque bloc
-        parts = re.split(f"({pattern})", full_text, flags=re.IGNORECASE)
-
-        # Reconstituer : séparateur + contenu suivant
         blocks = []
-        i = 0
-        while i < len(parts):
-            if re.match(pattern, parts[i].strip(), re.IGNORECASE):
-                bloc = parts[i]
-                if i + 1 < len(parts):
-                    bloc += parts[i + 1]
-                    i += 2
+
+        for page_text in pages:
+            if not page_text or len(page_text.strip()) < 50:
+                continue
+
+            # Nettoyer les espaces excessifs du mode layout
+            lines = page_text.split('\n')
+            cleaned_lines = []
+            for line in lines:
+                cleaned = re.sub(r'\s{3,}', '  ', line).strip()
+                if cleaned:
+                    cleaned_lines.append(cleaned)
+
+            page_clean = '\n'.join(cleaned_lines)
+
+            # Marqueurs d'un AO dans le Quotidien DGCMEF
+            ao_markers = [
+                r'Avis\s+de\s+demande\s+de\s+prix',
+                r'Avis\s+d[\'\u2019]appel\s+d[\'\u2019]offres',
+                r'Avis\s+de\s+manifestation',
+                r'Avis\s+de\s+s[eé]lection',
+                r'Avis\s+de\s+recrutement',
+                r'Avis\s+de\s+sollicitation',
+                r'Demande\s+de\s+propositions?',
+                r'Request\s+for\s+(?:proposal|quotation)',
+                r'Rectificatif\s+du\s+quotidien',
+            ]
+
+            combined = '|'.join(ao_markers)
+            positions = [(m.start(), m.group()) for m in re.finditer(combined, page_clean, re.IGNORECASE)]
+
+            if not positions:
+                continue
+
+            for idx, (pos, marker) in enumerate(positions):
+                context_start = max(0, pos - 500)
+                if idx + 1 < len(positions):
+                    end_pos = positions[idx + 1][0]
                 else:
-                    i += 1
-                if len(bloc.strip()) > 50:
-                    blocks.append(bloc.strip())
-            else:
-                i += 1
+                    end_pos = len(page_clean)
+
+                block = page_clean[context_start:end_pos].strip()
+                if len(block) > 100:
+                    blocks.append(block)
 
         logger.info(f"Découpage : {len(blocks)} bloc(s) AO identifié(s)")
-        return blocks if blocks else [full_text]  # Fallback : tout le texte
-
+        return blocks if blocks else [full_text]
 
 class AORawParser:
     """
@@ -320,12 +329,22 @@ class AORawParser:
             except ValueError:
                 pass
 
-        # Pattern 3 : dateparser (plus permissif)
-        parsed = dateparser.search.search_dates(text, languages=["fr"])
-        if parsed:
-            for _, dt in parsed:
-                if dt.date() > date.today():  # Date future = probable clôture
-                    return dt.date()
+        # Pattern 3 : format JJ/MM/AAAA
+        m3 = re.search(r'(\d{2})/(\d{2})/(\d{4})', text)
+        if m3:
+            try:
+                d = date(int(m3.group(3)), int(m3.group(2)), int(m3.group(1)))
+                if d.year >= 2024:
+                    return d
+            except ValueError:
+                pass
+
+        # Pattern 4 : date en français sans mot-clé (chercher toute date future)
+        p4 = r'(\d{1,2})\s+(janvier|f[eé]vrier|mars|avril|mai|juin|juillet|ao[uû]t|septembre|octobre|novembre|d[eé]cembre)\s+(\d{4})'
+        for m in re.finditer(p4, text, re.IGNORECASE):
+            d = self._parse_french_date(m.group(1), m.group(2), m.group(3))
+            if d and d.year >= 2024:
+                return d
 
         return None
 
