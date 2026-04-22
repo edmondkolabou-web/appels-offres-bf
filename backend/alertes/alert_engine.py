@@ -10,10 +10,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text, func
 
 from backend.models import AppelOffre, Abonne, PreferenceAlerte, EnvoiAlerte
-from whatsapp import AOAlertWhatsApp
-from email_sender import ResendClient
-from email_templates import render_nouvel_ao, render_rappel_j3, render_bienvenue
-from composables_alerts import build_ao_email_context
+from backend.alertes.whatsapp import AOAlertWhatsApp
+from backend.alertes.email_sender import ResendClient
+from backend.alertes.email_templates import render_nouvel_ao, render_rappel_j3, render_bienvenue
+from backend.alertes.composables_alerts import build_ao_email_context
 
 logger = logging.getLogger("netsync.alert_engine")
 

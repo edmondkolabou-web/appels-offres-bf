@@ -8,8 +8,8 @@ from typing import Optional
 from fastapi import Request, HTTPException, Header
 from sqlalchemy.orm import Session
 
-from cinetpay_client import CinetPayClient
-from subscription_service import SubscriptionService
+from backend.paiement.cinetpay_client import CinetPayClient
+from backend.paiement.subscription_service import SubscriptionService
 
 logger = logging.getLogger("netsync.webhook")
 

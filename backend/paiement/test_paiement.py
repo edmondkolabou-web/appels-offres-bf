@@ -8,8 +8,8 @@ from datetime import date, timedelta
 from unittest.mock import MagicMock, patch
 from uuid import uuid4
 
-from cinetpay_client import CinetPayClient
-from subscription_service import SubscriptionService, TARIFS, compute_expiry
+from backend.paiement.cinetpay_client import CinetPayClient
+from backend.paiement.subscription_service import SubscriptionService, TARIFS, compute_expiry
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────

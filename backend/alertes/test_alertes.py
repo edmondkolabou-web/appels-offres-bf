@@ -8,10 +8,10 @@ from datetime import date, timedelta
 from unittest.mock import MagicMock, patch
 from uuid import uuid4
 
-from whatsapp import normalize_phone, WhatsAppClient, AOAlertWhatsApp
-from email_templates import render_nouvel_ao, render_rappel_j3, render_bienvenue
-from email_sender import ResendClient
-from composables_alerts import build_ao_email_context
+from backend.alertes.whatsapp import normalize_phone, WhatsAppClient, AOAlertWhatsApp
+from backend.alertes.email_templates import render_nouvel_ao, render_rappel_j3, render_bienvenue
+from backend.alertes.email_sender import ResendClient
+from backend.alertes.composables_alerts import build_ao_email_context
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────

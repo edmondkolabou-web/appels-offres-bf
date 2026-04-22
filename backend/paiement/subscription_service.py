@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from backend.models import Abonne, Paiement
-from cinetpay_client import CinetPayClient
+from backend.paiement.cinetpay_client import CinetPayClient
 
 logger = logging.getLogger("netsync.subscription")
 
