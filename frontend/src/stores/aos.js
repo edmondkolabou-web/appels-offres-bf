@@ -43,7 +43,13 @@ export const useAOStore = defineStore('aos', () => {
       const { data } = await aoApi.detail(id)
       current.value = data
     } catch (err) {
-      useToastStore().add('AO introuvable', 'error')
+      if (err.response?.status === 402) {
+        useToastStore().add('Limite journalière atteinte — passez au plan Pro pour un accès illimité', 'error', 5000)
+      } else if (err.response?.status === 404) {
+        useToastStore().add('AO introuvable', 'error')
+      } else {
+        useToastStore().add('Erreur de chargement', 'error')
+      }
     } finally {
       loading.value = false
     }

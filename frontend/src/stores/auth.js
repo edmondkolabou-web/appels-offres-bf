@@ -22,6 +22,7 @@ export const useAuthStore = defineStore('auth', () => {
       const { data } = await authApi.login({ email, password })
       token.value = data.access_token
       localStorage.setItem('token', data.access_token)
+      if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token)
       await fetchMe()
       return true
     } catch (err) {
@@ -38,6 +39,7 @@ export const useAuthStore = defineStore('auth', () => {
       const { data } = await authApi.register(payload)
       token.value = data.access_token
       localStorage.setItem('token', data.access_token)
+      if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token)
       await fetchMe()
       return true
     } catch (err) {
@@ -72,6 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
     token.value  = null
     abonne.value = null
     localStorage.removeItem('token')
+    localStorage.removeItem('refresh_token')
   }
 
   return { token, abonne, loading, isAuthenticated, isPro, plan, initiales,
