@@ -127,7 +127,7 @@ class PDFExtractor:
                 continue
 
             for idx, (pos, marker) in enumerate(positions):
-                context_start = max(0, pos - 500)
+                context_start = max(0, pos - 300)
                 if idx + 1 < len(positions):
                     end_pos = positions[idx + 1][0]
                 else:
@@ -149,11 +149,13 @@ class AORawParser:
     # ── Patterns regex ─────────────────────────────────────────────────────────
 
     REF_PATTERNS = [
-        r"N°\s*([\d]{4}-[\d]+/[A-Z/]+(?:/[A-Z]+)*)",
+        r"N[°\s]*([\d]{4}[\s_-]+[\d\w_]+[/][A-Z][A-Z/\w]*)",  # N°2025-005/MSECU/SG/DMP
+        r"N[°\s]*(\d{4}[_\s-]*\d+[_\s]*/[A-Z][A-Z/_\w]*)",    # N°2025_07___/ONI/DG
+        r"n[°\s]*(\d{4}[\s_-]*\d+[\s_-]*/[\w/]+)",             # n°2025 -011 T_MEEA
+        r"N\s+(\d{4}-\d+/[\w/-]+)",                               # N 2025-01/CO-DD
         r"Réf[éeèê]rence\s*:?\s*([\w/-]+)",
-        r"(BF-[\w-]+-\d+-(?:GO|CS|CW|IC)-\w+)",  # Format Banque Mondiale STEP
-        r"(UNDP-\w+-\d+)",                          # Format UNDP
-        r"N°\s*(\d{4}[-_]\d+[/\w]*)",
+        r"(BF-[\w-]+-\d+-(?:GO|CS|CW|IC)-\w+)",
+        r"(UNDP-\w+-\d+)",
     ]
 
     DATE_PATTERNS = [
