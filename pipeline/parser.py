@@ -12,7 +12,7 @@ from typing import Optional, List
 import pdfplumber
 import dateparser
 
-from config import config
+from pipeline.config import config
 
 logger = logging.getLogger("netsync.parser")
 

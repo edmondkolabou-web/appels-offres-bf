@@ -10,12 +10,12 @@ from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 
-from config import config
-from models import Base, AppelOffre, PipelineLog
-from watcher import DGCMEFWatcher
-from parser import PDFExtractor, AORawParser, LLMFallbackParser
-from normalizer import AONormalizer
-from alerts import AlertEngine
+from pipeline.config import config
+from pipeline.models import Base, AppelOffre, PipelineLog
+from pipeline.watcher import DGCMEFWatcher
+from pipeline.parser import PDFExtractor, AORawParser, LLMFallbackParser
+from pipeline.normalizer import AONormalizer
+from pipeline.alerts import AlertEngine
 
 # ── Logging ────────────────────────────────────────────────────────────────────
 logging.basicConfig(

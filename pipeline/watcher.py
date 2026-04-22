@@ -12,8 +12,8 @@ from typing import Optional, Tuple
 from bs4 import BeautifulSoup
 from sqlalchemy.orm import Session
 
-from config import config
-from models import PipelineLog
+from pipeline.config import config
+from pipeline.models import PipelineLog
 
 logger = logging.getLogger("netsync.watcher")
 

@@ -12,9 +12,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import text
 
-from models import AppelOffre
-from parser import AORaw
-from config import config
+from pipeline.models import AppelOffre
+from pipeline.parser import AORaw
+from pipeline.config import config
 
 logger = logging.getLogger("netsync.normalizer")
 

@@ -12,8 +12,8 @@ import requests
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
-from models import AppelOffre, Abonne, PreferenceAlerte, EnvoiAlerte
-from config import config
+from pipeline.models import AppelOffre, Abonne, PreferenceAlerte, EnvoiAlerte
+from pipeline.config import config
 
 logger = logging.getLogger("netsync.alerts")
 

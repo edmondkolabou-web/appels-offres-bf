@@ -27,14 +27,14 @@ class AODetail(AOBase):
     description: Optional[str] = None
     pdf_url:     Optional[str] = None
     created_at:  datetime
-    est_urgent:  bool = False
+    est_urgent:  Optional[bool] = False
     jours_restants: Optional[int] = None
 
     model_config = {"from_attributes": True}
 
 class AOListItem(AOBase):
     id:          UUID
-    est_urgent:  bool = False
+    est_urgent:  Optional[bool] = False
     jours_restants: Optional[int] = None
 
     model_config = {"from_attributes": True}
