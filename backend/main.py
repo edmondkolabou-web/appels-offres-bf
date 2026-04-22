@@ -10,6 +10,7 @@ import logging
 import os
 
 from backend.routers import aos, auth, alertes, favoris, paiements, admin
+from backend.routers import totp
 
 # ── Logging ────────────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -93,6 +94,7 @@ app.include_router(alertes.router,   prefix="/api/v1/alertes",   tags=["Alertes"
 app.include_router(favoris.router,   prefix="/api/v1/favoris",   tags=["Favoris"])
 app.include_router(paiements.router, prefix="/api/v1/paiements", tags=["Paiements"])
 app.include_router(admin.router,     prefix="/api/v1/admin",     tags=["Admin"])
+app.include_router(totp.router,     prefix="/api/v1/auth/2fa",  tags=["2FA"])
 
 
 # ── Healthcheck ────────────────────────────────────────────────────────────────
