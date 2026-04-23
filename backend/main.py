@@ -16,6 +16,7 @@ import os
 from backend.routers import aos, auth, alertes, favoris, paiements, admin
 from backend.routers import totp
 from backend.routers import subscription
+from backend.routers import oauth, email_verification
 
 # ── Logging ────────────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -101,6 +102,8 @@ app.include_router(paiements.router, prefix="/api/v1/paiements", tags=["Paiement
 app.include_router(admin.router,     prefix="/api/v1/admin",     tags=["Admin"])
 app.include_router(totp.router,     prefix="/api/v1/auth/2fa",  tags=["2FA"])
 app.include_router(subscription.router, prefix="/api/v1/subscription", tags=["Subscription"])
+app.include_router(oauth.router, prefix="/api/v1/auth/oauth", tags=["OAuth"])
+app.include_router(email_verification.router, prefix="/api/v1/auth", tags=["Email Verification"])
 
 
 # ── PDFs : stockage local + proxy téléchargement ──────────────────────────────
