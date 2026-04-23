@@ -3,6 +3,10 @@ NetSync Gov — API FastAPI principale (SaaS)
 Rate limiting, headers sécurité, CORS strict, routers
 """
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, StreamingResponse
+from pathlib import Path
+import httpx
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -95,6 +99,52 @@ app.include_router(favoris.router,   prefix="/api/v1/favoris",   tags=["Favoris"
 app.include_router(paiements.router, prefix="/api/v1/paiements", tags=["Paiements"])
 app.include_router(admin.router,     prefix="/api/v1/admin",     tags=["Admin"])
 app.include_router(totp.router,     prefix="/api/v1/auth/2fa",  tags=["2FA"])
+
+
+# ── PDFs : stockage local + proxy téléchargement ──────────────────────────────
+pdf_dir = Path(__file__).parent / "static" / "pdfs"
+pdf_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/pdfs", StaticFiles(directory=str(pdf_dir)), name="pdfs")
+
+
+@app.get("/api/v1/download/quotidien/{numero}", tags=["Download"])
+async def download_quotidien(numero: int):
+    """Télécharge un Quotidien DGCMEF. Si déjà en cache local, sert directement."""
+    local_path = pdf_dir / f"quotidien_{numero}.pdf"
+
+    # Si déjà téléchargé, servir localement
+    if local_path.exists():
+        return FileResponse(
+            path=str(local_path),
+            filename=f"Quotidien_DGCMEF_{numero}.pdf",
+            media_type="application/pdf",
+        )
+
+    # Sinon, essayer de télécharger depuis la DGCMEF
+    urls_to_try = [
+        f"https://www.dgcmef.gov.bf/sites/default/files/2026-04/Quotidien%20N%C2%B0{numero}.pdf",
+        f"https://www.dgcmef.gov.bf/sites/default/files/2026-03/Quotidien%20N%C2%B0{numero}.pdf",
+        f"https://www.dgcmef.gov.bf/sites/default/files/2025-03/Quotidien%20N%C2%B0{numero}.pdf",
+        f"https://www.dgcmef.gov.bf/sites/default/files/2025-04/Quotidien%20N%C2%B0{numero}.pdf",
+    ]
+
+    async with httpx.AsyncClient(timeout=30, follow_redirects=True) as client:
+        for url in urls_to_try:
+            try:
+                resp = await client.get(url)
+                if resp.status_code == 200 and len(resp.content) > 1000:
+                    # Sauvegarder en cache local
+                    local_path.write_bytes(resp.content)
+                    logger.info(f"PDF Quotidien {numero} téléchargé et mis en cache ({len(resp.content)} bytes)")
+                    return FileResponse(
+                        path=str(local_path),
+                        filename=f"Quotidien_DGCMEF_{numero}.pdf",
+                        media_type="application/pdf",
+                    )
+            except Exception:
+                continue
+
+    raise HTTPException(status_code=404, detail=f"Quotidien N°{numero} introuvable sur la DGCMEF")
 
 
 # ── Healthcheck ────────────────────────────────────────────────────────────────
