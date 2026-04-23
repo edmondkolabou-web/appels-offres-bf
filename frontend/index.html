@@ -1,14 +1,85 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NetSync Gov — Appels d'offres Burkina Faso</title>
-  <link rel="icon" href="/favicon.ico">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-</head>
-<body>
-  <div id="app"></div>
-  <script type="module" src="/src/main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <title>NetSync Gov — Appels d'Offres Burkina Faso</title>
+    <meta name="description" content="Agrégateur d'appels d'offres publics du Burkina Faso. Alertes WhatsApp et email automatiques. PME, consultants, bureaux d'études — trouvez vos marchés." />
+    <meta name="keywords" content="appels d'offres, marchés publics, Burkina Faso, DGCMEF, PME, consultant, bureau d'études, Ouagadougou" />
+    <meta name="author" content="NetSync Africa" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://gov.netsync.bf/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="NetSync Gov — Appels d'Offres Burkina Faso" />
+    <meta property="og:description" content="Premier agrégateur burkinabè d'appels d'offres publics avec alertes WhatsApp et email." />
+    <meta property="og:url" content="https://gov.netsync.bf/" />
+    <meta property="og:locale" content="fr_BF" />
+    <meta property="og:site_name" content="NetSync Gov" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="NetSync Gov — Appels d'Offres Burkina Faso" />
+    <meta name="twitter:description" content="Trouvez tous les appels d'offres publics du Burkina Faso. Alertes WhatsApp + email." />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0082C9" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="NetSync Gov" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-96.png" />
+
+    <!-- Structured Data JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "NetSync Gov",
+      "description": "Agrégateur d'appels d'offres publics du Burkina Faso avec alertes WhatsApp et email",
+      "url": "https://gov.netsync.bf",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "XOF",
+        "description": "Plan gratuit avec 3 AOs par jour"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "NetSync Africa",
+        "url": "https://netsync.bf"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      // Enregistrer le Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(() => console.log('SW registered'))
+            .catch((err) => console.log('SW registration failed:', err))
+        })
+      }
+    </script>
+
+    <!-- Noscript fallback -->
+    <noscript>
+      <div style="text-align:center;padding:3rem;font-family:sans-serif;">
+        <h1>NetSync Gov</h1>
+        <p>JavaScript est requis pour utiliser cette application.</p>
+      </div>
+    </noscript>
+  </body>
 </html>

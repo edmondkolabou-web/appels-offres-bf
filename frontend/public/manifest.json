@@ -1,0 +1,14 @@
+{
+  "name": "NetSync Gov — Appels d'Offres Burkina Faso",
+  "short_name": "NetSync Gov",
+  "description": "Agrégateur d'appels d'offres publics du Burkina Faso avec alertes WhatsApp et email",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0C1B2A",
+  "theme_color": "#0082C9",
+  "lang": "fr",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
