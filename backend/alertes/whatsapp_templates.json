@@ -1,0 +1,98 @@
+{
+  "templates": [
+    {
+      "name": "netsync_nouvel_ao",
+      "language": "fr",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "📋 Nouvel Appel d'Offres"
+        },
+        {
+          "type": "BODY",
+          "text": "Bonjour {{1}},\n\nUn nouvel AO correspond à vos critères :\n\n📌 *{{2}}*\n🏢 {{3}}\n📁 Secteur : {{4}}\n📅 Clôture : {{5}}\n\nConsultez-le sur NetSync Gov :\n{{6}}",
+          "example": {
+            "body_text": [["Amadou", "Fourniture de matériel informatique", "MENA", "Informatique", "15 mai 2026", "https://gov.netsync.bf/aos/123"]]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "NetSync Gov — Appels d'Offres Burkina Faso"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            { "type": "URL", "text": "Voir l'AO", "url": "https://gov.netsync.bf/aos/{{1}}", "example": ["abc123"] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "netsync_rappel_cloture",
+      "language": "fr",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "⏰ Rappel — Clôture dans {{1}} jours"
+        },
+        {
+          "type": "BODY",
+          "text": "Bonjour {{1}},\n\nL'appel d'offres suivant clôture bientôt :\n\n📌 *{{2}}*\n🏢 {{3}}\n📅 Date limite : *{{4}}*\n\nN'oubliez pas de soumettre votre offre !\n{{5}}",
+          "example": {
+            "body_text": [["Amadou", "Travaux de construction", "Ministère", "20 mai 2026", "https://gov.netsync.bf/aos/123"]]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "NetSync Gov — Ne manquez aucune opportunité"
+        }
+      ]
+    },
+    {
+      "name": "netsync_bienvenue",
+      "language": "fr",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "🎉 Bienvenue sur NetSync Gov !"
+        },
+        {
+          "type": "BODY",
+          "text": "Bonjour {{1}},\n\nVotre compte NetSync Gov est actif (plan {{2}}).\n\nVous recevrez des alertes pour les secteurs :\n{{3}}\n\nBon succès dans vos marchés !\n\n👉 https://gov.netsync.bf",
+          "example": {
+            "body_text": [["Amadou", "Pro", "BTP, Informatique, Santé"]]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "NetSync Gov — Appels d'Offres Burkina Faso"
+        }
+      ]
+    },
+    {
+      "name": "netsync_relance_abonnement",
+      "language": "fr",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "BODY",
+          "text": "Bonjour {{1}},\n\nVotre abonnement NetSync Gov {{2}} expire dans {{3}} jours (le {{4}}).\n\nRenouvelez maintenant pour continuer à recevoir vos alertes AO :\n👉 https://gov.netsync.bf/pricing\n\nMerci pour votre confiance !",
+          "example": {
+            "body_text": [["Amadou", "Pro", "3", "30 avril 2026"]]
+          }
+        },
+        {
+          "type": "FOOTER",
+          "text": "NetSync Gov — Ne manquez aucune opportunité"
+        }
+      ]
+    }
+  ],
+  "_instructions": "Ces templates doivent être soumis à Meta via le Business Manager WhatsApp. Catégorie UTILITY = pas de frais de marketing. Après approbation (24-48h), ils peuvent être utilisés par le module backend/alertes/whatsapp.py"
+}
