@@ -1,0 +1,14 @@
+# NetSync Gov — Crontab production (à installer sur le VPS)
+# sudo crontab -e
+
+# Backup BDD quotidien à 02h00
+0 2 * * * /opt/netsync-gov/deploy/backup-db.sh >> /var/log/netsync-backup.log 2>&1
+
+# Monitoring toutes les 5 minutes
+*/5 * * * * cd /opt/netsync-gov && python3 deploy/monitoring.py >> /var/log/netsync-monitor.log 2>&1
+
+# Renouvellement SSL à 03h00
+0 3 * * * certbot renew --quiet --post-hook 'docker compose -f /opt/netsync-gov/deploy/docker-compose.prod.yml restart nginx'
+
+# Reset compteurs AO quotidiens à minuit
+0 0 * * * docker exec netsync_db psql -U netsync -d netsync_gov -c "UPDATE abonnes SET ao_consultes_auj = 0;"
