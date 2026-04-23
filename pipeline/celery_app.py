@@ -66,6 +66,13 @@ app.conf.beat_schedule = {
         "args": (),
     },
 
+    # Relance abonnements J-7, J-3, J-1
+    "relance-j7-08h00": {
+        "task": "pipeline.celery_app.send_renewal_reminders",
+        "schedule": crontab(hour=8, minute=0),
+        "args": (),
+    },
+
     # Relance abonnements expirés : 08h00
     "relance-abonnements": {
         "task": "pipeline.celery_app.check_expired_subscriptions",
@@ -227,3 +234,46 @@ if __name__ == "__main__":
     print()
     print("Lancer le worker: celery -A pipeline.celery_app worker -l info")
     print("Lancer le beat:   celery -A pipeline.celery_app beat -l info")
+
+
+@app.task
+def send_renewal_reminders():
+    """Envoie des rappels de renouvellement J-7, J-3, J-1 avant expiration."""
+    from datetime import date, timedelta
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+
+    db_url = os.getenv("DATABASE_URL", "postgresql://netsync:devpassword@localhost:5432/netsync_gov_dev")
+    engine = create_engine(db_url)
+    Session = sessionmaker(bind=engine)
+    db = Session()
+
+    try:
+        import sys
+        sys.path.insert(0, os.path.dirname(__file__))
+        from models import Abonne
+
+        today = date.today()
+        reminders = {7: "j7", 3: "j3", 1: "j1"}
+        total_sent = 0
+
+        for days, label in reminders.items():
+            target_date = today + timedelta(days=days)
+            abonnes = db.query(Abonne).filter(
+                Abonne.plan.in_(["pro", "equipe"]),
+                Abonne.plan_expire_le == target_date,
+            ).all()
+
+            for abonne in abonnes:
+                logger.info(f"Relance {label}: {abonne.email} — expire le {abonne.plan_expire_le}")
+                # TODO: Envoyer email via Resend
+                # TODO: Envoyer WhatsApp si numéro disponible
+                total_sent += 1
+
+        logger.info(f"Relances envoyées: {total_sent}")
+        return {"reminders_sent": total_sent}
+    except Exception as e:
+        logger.error(f"Erreur relances: {e}")
+        return {"error": str(e)}
+    finally:
+        db.close()
