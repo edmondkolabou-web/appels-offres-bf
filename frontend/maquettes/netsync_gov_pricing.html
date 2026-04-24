@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetSync Gov — Tarifs & Paiement</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue-50:#E6F1FB;--blue-100:#B5D4F4;--blue-200:#85B7EB;--blue-300:#5BA8E8;
+  --blue-400:#378ADD;--blue-500:#0082C9;--blue-600:#006AA3;--blue-700:#005080;
+  --green-50:#EAF3DE;--green-400:#1D9E75;--green-600:#0F6E56;
+  --amber-50:#FAEEDA;--amber-400:#BA7517;--amber-600:#854F0B;
+  --red-50:#FCEBEB;--red-400:#E24B4A;--red-600:#A32D2D;
+  --ink:#0F1923;--ink-700:#2A3440;--ink-500:#4A5568;--muted:#64748B;
+  --border:#E2E8F0;--border-md:#CBD5E1;--surface:#F7F9FB;--surface-2:#EFF3F7;
+  --white:#FFFFFF;
+  --font-display:'DM Serif Display',serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius-sm:4px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px;--radius-full:9999px;
+  --shadow-sm:0 1px 3px rgba(15,25,35,.06);
+  --shadow-md:0 4px 12px rgba(15,25,35,.08);
+  --shadow-lg:0 16px 40px rgba(15,25,35,.12);
+  --shadow-blue:0 4px 16px rgba(0,130,201,.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:14px;scroll-behavior:smooth;}
+body{font-family:var(--font-body);color:var(--ink);background:var(--surface);-webkit-font-smoothing:antialiased;}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:58px;display:flex;align-items:center;padding:0 1.5rem;gap:1.5rem;}
+.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;font-family:var(--font-display);font-size:1.1rem;color:var(--blue-700);}
+.nav-logo-icon{width:32px;height:32px;background:var(--blue-500);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;}
+.nav-sep{width:1px;height:20px;background:var(--border);}
+.nav-links{display:flex;gap:1.25rem;}
+.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .15s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-links a.active{color:var(--blue-500);}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:.75rem;}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--blue-50);color:var(--blue-600);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;}
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-weight:500;border-radius:var(--radius-md);border:none;cursor:pointer;transition:all .2s;font-size:13px;}
+.btn-primary{background:var(--blue-500);color:var(--white);padding:8px 18px;box-shadow:var(--shadow-blue);}
+.btn-primary:hover{background:var(--blue-600);}
+.btn-ghost{background:var(--white);color:var(--ink);padding:7px 14px;border:1px solid var(--border-md);}
+.btn-ghost:hover{background:var(--surface);}
+
+/* ── HERO TARIFS ── */
+.pricing-hero{background:var(--ink);padding:3.5rem 2rem 2rem;text-align:center;}
+.pricing-hero-tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.75rem;}
+.pricing-hero-title{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.8rem);color:var(--white);line-height:1.2;margin-bottom:.75rem;}
+.pricing-hero-title em{font-style:italic;color:var(--blue-300);}
+.pricing-hero-sub{font-size:14px;color:rgba(255,255,255,.5);max-width:480px;margin:0 auto 2rem;line-height:1.6;}
+
+/* Toggle mensuel/annuel */
+.billing-toggle{display:inline-flex;align-items:center;gap:.875rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-full);padding:5px 16px;margin-bottom:0;}
+.billing-opt{font-size:13px;color:rgba(255,255,255,.45);cursor:pointer;transition:color .2s;padding:4px 0;user-select:none;}
+.billing-opt.active{color:var(--white);font-weight:500;}
+.limit-badge{background:var(--red-50);color:var(--red-600);border:1px solid var(--red-400);font-size:10px;padding:2px 7px;border-radius:var(--radius-full);font-weight:600;}
+.billing-switch{width:38px;height:22px;border-radius:var(--radius-full);background:var(--blue-500);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.billing-switch-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--white);transition:left .2s;box-shadow:var(--shadow-sm);}
+.billing-switch.annual .billing-switch-thumb{left:19px;}
+.annual-badge{font-size:10px;font-weight:600;background:var(--amber-400);color:var(--white);padding:2px 7px;border-radius:var(--radius-full);margin-left:4px;}
+
+/* ── PLANS GRID ── */
+.plans-wrap{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem;}
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:3rem;}
+
+.plan-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);padding:2rem;position:relative;transition:transform .2s,box-shadow .2s;}
+.plan-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.plan-card.featured{border:2px solid var(--blue-500);box-shadow:var(--shadow-blue);}
+.plan-card.featured:hover{box-shadow:0 8px 24px rgba(0,130,201,.3);border-color:var(--blue-100);}
+
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--blue-500);color:var(--white);font-size:11px;font-weight:600;padding:3px 14px;border-radius:var(--radius-full);white-space:nowrap;}
+.plan-badge.green{background:var(--green-400);}
+
+.plan-name{font-size:13px;font-weight:500;color:var(--muted);margin-bottom:.625rem;text-transform:uppercase;letter-spacing:.06em;}
+.plan-price-wrap{margin-bottom:.25rem;}
+.plan-price{font-family:var(--font-display);font-size:2.2rem;color:var(--ink);line-height:1;}
+.plan-price-unit{font-size:13px;color:var(--muted);font-family:var(--font-body);}
+.plan-price-annual{font-size:11px;color:var(--green-600);font-weight:500;margin-top:3px;min-height:16px;}
+.plan-divider{height:1px;background:var(--border);margin:1.25rem 0;}
+
+.plan-feat-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem;}
+.plan-feat{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.4;}
+.plan-feat-icon{flex-shrink:0;margin-top:1px;}
+.feat-check{color:var(--green-400);font-weight:700;}
+.feat-cross{color:var(--border-md);}
+.plan-feat.off{color:var(--muted);opacity:.6;}
+
+.plan-btn{width:100%;padding:11px;border-radius:var(--radius-md);font-family:var(--font-body);font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;border:none;}
+.plan-btn-outline{background:var(--white);color:var(--ink);border:1.5px solid var(--border-md);}
+.plan-btn-outline:hover{background:var(--surface);border-color:var(--border);}
+.plan-btn-solid{background:var(--blue-400);color:var(--white);box-shadow:var(--shadow-blue);}
+.plan-btn-solid:hover{background:var(--blue-500);}
+.plan-btn-dark{background:var(--ink);color:var(--white);}
+.plan-btn-dark:hover{background:var(--ink-700);}
+
+/* Plan current chip */
+.plan-current{display:inline-flex;align-items:center;gap:5px;background:var(--green-50);color:var(--green-600);font-size:11px;font-weight:600;padding:3px 10px;border-radius:var(--radius-full);margin-bottom:.75rem;}
+.plan-current svg{width:10px;height:10px;}
+
+/* ── COMPARAISON TABLEAU ── */
+.compare-section{margin-bottom:3rem;}
+.compare-title{font-family:var(--font-display);font-size:1.5rem;color:var(--ink);margin-bottom:1.25rem;text-align:center;}
+.compare-toggle{text-align:center;margin-bottom:1.25rem;}
+.compare-toggle a{font-size:13px;color:var(--blue-500);cursor:pointer;text-decoration:none;}
+
+.compare-table{width:100%;border-collapse:collapse;background:var(--white);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-sm);}
+.compare-table th{padding:.875rem 1rem;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--blue-200);text-align:left;}
+.compare-table th:first-child{width:45%;}
+.compare-table th.featured-col{background:var(--blue-50);color:var(--blue-600);}
+.compare-table td{padding:.75rem 1rem;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.compare-table td:first-child{color:var(--ink-700);}
+.compare-table td.featured-col{background:var(--blue-50);}
+.compare-table tr:last-child td{border-bottom:none;}
+.compare-table tr:hover td{background:var(--surface);}
+.compare-table tr:hover td.featured-col{background:#D8EAFA;}
+.check-icon{color:var(--green-400);font-weight:700;font-size:15px;}
+.cross-icon{color:var(--border-md);font-size:15px;}
+.cat-row td{background:var(--surface-2);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:.5rem 1rem;}
+.cat-row td.featured-col{background:var(--blue-50);}
+
+/* ── PAIEMENT SECTION ── */
+.payment-section{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);padding:2rem;margin-bottom:3rem;}
+.payment-title{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:.375rem;}
+.payment-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem;}
+
+.payment-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;}
+.payment-method{border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:.625rem;text-align:center;}
+.payment-method:hover{border-color:var(--blue-300);background:var(--blue-50);}
+.payment-method.selected{border-color:var(--blue-500);background:var(--blue-50);box-shadow:0 0 0 3px rgba(0,130,201,.1);}
+.payment-method-icon{width:48px;height:48px;border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:22px;}
+.payment-method-name{font-size:13px;font-weight:500;color:var(--ink);}
+.payment-method-detail{font-size:11px;color:var(--muted);}
+
+/* Form paiement */
+.payment-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:12px;font-weight:500;color:var(--ink-500);}
+.form-input{font-family:var(--font-body);font-size:13px;color:var(--ink);background:var(--white);border:1.5px solid var(--border-md);border-radius:var(--radius-md);padding:9px 12px;outline:none;transition:border-color .15s,box-shadow .15s;}
+.form-input:focus{border-color:var(--blue-500);box-shadow:0 0 0 3px rgba(0,130,201,.12);}
+.form-input::placeholder{color:var(--muted);}
+.form-hint{font-size:11px;color:var(--muted);}
+
+/* Phone input avec préfixe */
+.phone-wrap{display:flex;}
+.phone-prefix{background:var(--surface-2);border:1.5px solid var(--border-md);border-right:none;border-radius:var(--radius-md) 0 0 var(--radius-md);padding:9px 10px;font-size:13px;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:4px;}
+.phone-wrap .form-input{border-radius:0 var(--radius-md) var(--radius-md) 0;flex:1;}
+
+/* Récapitulatif commande */
+.order-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.25rem;}
+.order-row{display:flex;align-items:center;justify-content:space-between;font-size:13px;padding:.375rem 0;}
+.order-row-label{color:var(--muted);}
+.order-row-val{font-weight:500;color:var(--ink);}
+.order-divider{height:1px;background:var(--border);margin:.625rem 0;}
+.order-total-row{display:flex;align-items:center;justify-content:space-between;font-size:15px;font-weight:600;}
+.order-total-val{color:var(--blue-500);font-family:var(--font-mono);font-size:1.3rem;}
+.order-promo{color:var(--amber-600);font-size:11px;font-weight:500;}
+
+.pay-btn{width:100%;padding:13px;background:var(--blue-500);color:var(--white);border:none;border-radius:var(--radius-md);font-family:var(--font-body);font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:var(--shadow-blue);}
+.pay-btn:hover{background:var(--blue-600);box-shadow:0 6px 20px rgba(0,130,201,.35);}
+.pay-btn:active{transform:scale(.99);}
+.pay-security{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:var(--muted);margin-top:.75rem;}
+
+/* Spinner */
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── FAQ ── */
+.faq-section{margin-bottom:3rem;}
+.faq-title{font-family:var(--font-display);font-size:1.4rem;color:var(--ink);margin-bottom:1.25rem;text-align:center;}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.faq-item{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+.faq-question{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.25rem;cursor:pointer;font-size:13px;font-weight:500;color:var(--ink);gap:.75rem;user-select:none;}
+.faq-question:hover{background:var(--amber-50);}
+.faq-arrow{width:16px;height:16px;flex-shrink:0;color:var(--muted);transition:transform .2s;}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-answer{font-size:13px;color:var(--muted);line-height:1.6;padding:0 1.25rem;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s;}
+.faq-item.open .faq-answer{max-height:200px;padding:.75rem 1.25rem;}
+
+/* ── CTA ── */
+.cta-section{background:var(--ink);border-radius:var(--radius-xl);padding:2.5rem;text-align:center;margin-bottom:3rem;}
+.cta-title{font-family:var(--font-display);font-size:1.6rem;color:var(--white);margin-bottom:.625rem;}
+.cta-sub{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:1.5rem;line-height:1.6;}
+.cta-actions{display:flex;align-items:center;justify-content:center;gap:.875rem;flex-wrap:wrap;}
+
+/* Garantie badges */
+.guarantees{display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap;padding:1.5rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:3rem;}
+.guarantee-item{display:flex;align-items:center;gap:.625rem;font-size:13px;color:var(--muted);}
+.guarantee-icon{width:32px;height:32px;border-radius:50%;background:var(--green-50);color:var(--green-400);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* Toast */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;background:var(--ink);color:var(--white);font-size:13px;font-weight:500;padding:12px 18px;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:8px;transition:opacity .3s,transform .3s;pointer-events:none;}
+.toast.hidden{opacity:0;transform:translateY(8px);}
+
+/* Responsive */
+@media(max-width:900px){
+  .plans-grid{grid-template-columns:1fr;}
+  .compare-table{display:none;}
+  .payment-form-grid{grid-template-columns:1fr;}
+  .payment-methods{grid-template-columns:1fr;}
+  .faq-grid{grid-template-columns:1fr;}
+  .guarantees{gap:1rem;}
+}
+@media(max-width:600px){
+  .plans-wrap{padding:1.5rem 1rem;}
+  .cta-actions{flex-direction:column;}
+  .payment-section{padding:1.25rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    NetSync Gov
+  </a>
+  <div class="nav-sep"></div>
+  <nav class="nav-links">
+    <a href="#">Appels d'offres</a>
+    <a href="#" class="active">Tarifs</a>
+    <a href="#">Mon compte</a>
+  </nav>
+  <div class="nav-right">
+    <div style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--ink-700);">
+      <div class="avatar">EK</div>
+      Edmond K.
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="pricing-hero">
+  <div class="pricing-hero-tag">Tarifs NetSync Gov</div>
+  <h1 class="pricing-hero-title">Simple, transparent,<br><em>payable en Mobile Money</em></h1>
+  <p class="pricing-hero-sub">Commence gratuitement. Passe au Pro quand tu veux. Paiement Orange Money, Moov ou carte bancaire.</p>
+
+  <div class="billing-toggle" role="group" aria-label="Choisir la période de facturation">
+    <span class="billing-opt active" id="opt-monthly" onclick="setBilling('monthly')">Mensuel</span>
+    <div class="billing-switch" id="billing-switch" onclick="toggleBilling()" role="switch" aria-checked="false" aria-label="Basculer vers facturation annuelle">
+      <div class="billing-switch-thumb"></div>
+    </div>
+    <span class="billing-opt" id="opt-annual" onclick="setBilling('annual')">Annuel <span class="annual-badge">-20%</span></span>
+  </div>
+</div>
+
+<!-- PLANS -->
+<div class="plans-wrap">
+
+  <div class="plans-grid" role="list" aria-label="Plans tarifaires">
+
+    <!-- Plan Gratuit -->
+    <div class="plan-card" role="listitem">
+      <div class="plan-name">Gratuit</div>
+      <div class="limit-badge">Limite : 3 AO/jour</div>
+      <div class="plan-price-wrap">
+        <div class="plan-price">0 <span class="plan-price-unit">FCFA / mois</span></div>
+        <div class="plan-price-annual">&nbsp;</div>
+      </div>
+      <div class="plan-divider"></div>
+      <div class="plan-feat-list">
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>3 AO consultables par jour</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Recherche basique</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Accès aux AO du jour</div>
+        <div class="plan-feat off"><span class="plan-feat-icon feat-cross">–</span>Alertes email / WhatsApp</div>
+        <div class="plan-feat off"><span class="plan-feat-icon feat-cross">–</span>Historique des AO</div>
+        <div class="plan-feat off"><span class="plan-feat-icon feat-cross">–</span>Filtres avancés</div>
+        <div class="plan-feat off"><span class="plan-feat-icon feat-cross">–</span>Calendrier des clôtures</div>
+      </div>
+      <button class="plan-btn plan-btn-outline" aria-label="S'inscrire au plan Gratuit" onclick="showToast('Inscription plan Gratuit...')">
+        Commencer gratuitement
+      </button>
+    </div>
+
+    <!-- Plan Pro -->
+    <div class="plan-card featured" role="listitem">
+      <div class="plan-badge">Recommandé</div>
+      <div class="plan-current">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        Votre plan actuel
+      </div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price-wrap">
+        <div class="plan-price" id="pro-price">15 000 <span class="plan-price-unit">FCFA / mois</span></div>
+        <div class="plan-price-annual" id="pro-annual">&nbsp;</div>
+      </div>
+      <div class="plan-divider"></div>
+      <div class="plan-feat-list">
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>AO illimités</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Alertes email + WhatsApp</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Filtres secteur / région / montant</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Historique 12 mois</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Calendrier clôtures + alerte J-3</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Multi-sources (DGCMEF, UNDP, BM)</div>
+        <div class="plan-feat off"><span class="plan-feat-icon feat-cross">–</span>Comptes équipe</div>
+      </div>
+      <button class="plan-btn plan-btn-solid" aria-label="Renouveler le plan Pro" onclick="scrollToPaiement()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="2"/></svg>
+        Renouveler — 15 000 FCFA
+      </button>
+    </div>
+
+    <!-- Plan Équipe -->
+    <div class="plan-card" role="listitem">
+      <div class="plan-badge green">Nouveau</div>
+      <div class="plan-name">Équipe</div>
+      <div class="plan-price-wrap">
+        <div class="plan-price" id="team-price">45 000 <span class="plan-price-unit">FCFA / mois</span></div>
+        <div class="plan-price-annual" id="team-annual">&nbsp;</div>
+      </div>
+      <div class="plan-divider"></div>
+      <div class="plan-feat-list">
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Tout Pro inclus</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>5 comptes utilisateurs</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Dashboard équipe partagé</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Suivi candidatures interne</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Historique 24 mois</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Support prioritaire</div>
+        <div class="plan-feat"><span class="plan-feat-icon feat-check">✓</span>Export données (CSV)</div>
+      </div>
+      <button class="plan-btn plan-btn-dark" aria-label="Passer au plan Équipe" onclick="selectPlan('equipe');scrollToPaiement()">
+        Passer au plan Équipe →
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Garanties -->
+  <div class="guarantees" role="list" aria-label="Garanties">
+    <div class="guarantee-item" role="listitem">
+      <div class="guarantee-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      Paiement 100% sécurisé
+    </div>
+    <div class="guarantee-item" role="listitem">
+      <div class="guarantee-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+      </div>
+      Orange Money & Moov
+    </div>
+    <div class="guarantee-item" role="listitem">
+      <div class="guarantee-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </div>
+      Sans engagement
+    </div>
+    <div class="guarantee-item" role="listitem">
+      <div class="guarantee-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      Accès immédiat
+    </div>
+  </div>
+
+  <!-- Tableau comparatif -->
+  <div class="compare-section">
+    <h2 class="compare-title">Comparaison détaillée des plans</h2>
+    <div class="compare-toggle"><a href="#" onclick="showToast('Tableau masqué')">Masquer la comparaison détaillée</a></div>
+    <table class="compare-table" role="table" aria-label="Tableau comparatif des plans">
+      <thead>
+        <tr>
+          <th scope="col">Fonctionnalité</th>
+          <th scope="col">Gratuit</th>
+          <th scope="col" class="featured-col">Pro</th>
+          <th scope="col">Équipe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="cat-row"><td colspan="4">Accès aux données</td></tr>
+        <tr><td>AO consultables par jour</td><td>3</td><td class="featured-col"><strong>Illimités</strong></td><td>Illimités</td></tr>
+        <tr><td>Historique des AO</td><td><span class="cross-icon">–</span></td><td class="featured-col">12 mois</td><td>24 mois</td></tr>
+        <tr><td>Recherche full-text</td><td>Basique</td><td class="featured-col">Avancée</td><td>Avancée</td></tr>
+        <tr><td>Sources (DGCMEF, UNDP, BM…)</td><td>DGCMEF seul</td><td class="featured-col"><span class="check-icon">✓</span> Toutes</td><td><span class="check-icon">✓</span> Toutes</td></tr>
+
+        <tr class="cat-row"><td colspan="4">Alertes & Notifications</td></tr>
+        <tr><td>Alertes email par secteur</td><td><span class="cross-icon">–</span></td><td class="featured-col"><span class="check-icon">✓</span></td><td><span class="check-icon">✓</span></td></tr>
+        <tr><td>Alertes WhatsApp</td><td><span class="cross-icon">–</span></td><td class="featured-col"><span class="check-icon">✓</span></td><td><span class="check-icon">✓</span></td></tr>
+        <tr><td>Rappel clôture J-3</td><td><span class="cross-icon">–</span></td><td class="featured-col"><span class="check-icon">✓</span></td><td><span class="check-icon">✓</span></td></tr>
+        <tr><td>Alertes mots-clés personnalisés</td><td><span class="cross-icon">–</span></td><td class="featured-col"><span class="check-icon">✓</span></td><td><span class="check-icon">✓</span></td></tr>
+
+        <tr class="cat-row"><td colspan="4">Collaboration & Export</td></tr>
+        <tr><td>Comptes utilisateurs</td><td>1</td><td class="featured-col">1</td><td><strong>5</strong></td></tr>
+        <tr><td>Dashboard équipe partagé</td><td><span class="cross-icon">–</span></td><td class="featured-col"><span class="cross-icon">–</span></td><td><span class="check-icon">✓</span></td></tr>
+        <tr><td>Export données CSV</td><td><span class="cross-icon">–</span></td><td class="featured-col"><span class="cross-icon">–</span></td><td><span class="check-icon">✓</span></td></tr>
+        <tr><td>Suivi candidatures</td><td><span class="cross-icon">–</span></td><td class="featured-col"><span class="cross-icon">–</span></td><td><span class="check-icon">✓</span></td></tr>
+
+        <tr class="cat-row"><td colspan="4">Support</td></tr>
+        <tr><td>Support email</td><td><span class="check-icon">✓</span></td><td class="featured-col"><span class="check-icon">✓</span></td><td><span class="check-icon">✓</span></td></tr>
+        <tr><td>Support prioritaire</td><td><span class="cross-icon">–</span></td><td class="featured-col"><span class="cross-icon">–</span></td><td><span class="check-icon">✓</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── PAIEMENT ── -->
+  <div class="payment-section" id="paiement-section">
+    <div class="payment-title">Finaliser votre abonnement</div>
+    <p class="payment-sub">Choisissez votre méthode de paiement et complétez votre abonnement en moins de 2 minutes.</p>
+
+    <div class="payment-methods" role="radiogroup" aria-label="Méthodes de paiement">
+      <div class="payment-method selected" onclick="selectMethod(this,'om')" role="radio" aria-checked="true" tabindex="0">
+        <div class="payment-method-icon" style="background:#FFF3E0;">🟠</div>
+        <div class="payment-method-name">Orange Money</div>
+        <div class="payment-method-detail">Paiement instantané BF</div>
+      </div>
+      <div class="payment-method" onclick="selectMethod(this,'mv')" role="radio" aria-checked="false" tabindex="0">
+        <div class="payment-method-icon" style="background:#E3F2FD;">🔵</div>
+        <div class="payment-method-name">Moov Money</div>
+        <div class="payment-method-detail">Paiement instantané BF</div>
+      </div>
+      <div class="payment-method" onclick="selectMethod(this,'card')" role="radio" aria-checked="false" tabindex="0">
+        <div class="payment-method-icon" style="background:var(--surface-2);">💳</div>
+        <div class="payment-method-name">Carte bancaire</div>
+        <div class="payment-method-detail">Visa / Mastercard</div>
+      </div>
+    </div>
+
+    <div class="payment-form-grid" id="payment-fields">
+      <!-- Orange Money fields (défaut) -->
+      <div class="form-group full" id="field-om">
+        <label class="form-label" for="om-phone">Numéro Orange Money</label>
+        <div class="phone-wrap">
+          <div class="phone-prefix">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 0111.82 19a19.5 19.5 0 01-6.29-6.3 19.79 19.79 0 01-2.92-8.72A2 2 0 014.76 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.91 9.91a16 16 0 006.18 6.18l1.07-1.07a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            +226
+          </div>
+          <input class="form-input" type="tel" id="om-phone" placeholder="70 00 00 00" autocomplete="tel" aria-label="Numéro Orange Money">
+        </div>
+        <span class="form-hint">Un code de confirmation sera envoyé sur ce numéro</span>
+      </div>
+
+      <!-- Carte fields (caché par défaut) -->
+      <div class="form-group full" id="field-card" style="display:none;">
+        <label class="form-label" for="card-num">Numéro de carte</label>
+        <input class="form-input" type="text" id="card-num" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="cc-number" aria-label="Numéro de carte bancaire" oninput="formatCard(this)">
+      </div>
+      <div class="form-group" id="field-expiry" style="display:none;">
+        <label class="form-label" for="card-expiry">Date d'expiration</label>
+        <input class="form-input" type="text" id="card-expiry" placeholder="MM / AA" maxlength="7" autocomplete="cc-exp" aria-label="Date d'expiration de la carte">
+      </div>
+      <div class="form-group" id="field-cvv" style="display:none;">
+        <label class="form-label" for="card-cvv">CVV</label>
+        <input class="form-input" type="text" id="card-cvv" placeholder="123" maxlength="3" autocomplete="cc-csc" aria-label="Code CVV de la carte">
+      </div>
+      <div class="form-group full" id="field-cardholder" style="display:none;">
+        <label class="form-label" for="card-name">Nom sur la carte</label>
+        <input class="form-input" type="text" id="card-name" placeholder="ADAMA KABORE" autocomplete="cc-name" aria-label="Nom du titulaire de la carte">
+      </div>
+    </div>
+
+    <div class="order-summary" aria-label="Récapitulatif de la commande">
+      <div class="order-row">
+        <span class="order-row-label">Plan sélectionné</span>
+        <span class="order-row-val" id="order-plan">Plan Pro</span>
+      </div>
+      <div class="order-row">
+        <span class="order-row-label">Période</span>
+        <span class="order-row-val" id="order-period">Mensuel <span class="order-promo" id="order-promo" style="display:none;">(-20%)</span></span>
+      </div>
+      <div class="order-row">
+        <span class="order-row-label">Méthode de paiement</span>
+        <span class="order-row-val" id="order-method">Orange Money</span>
+      </div>
+      <div class="order-divider"></div>
+      <div class="order-total-row">
+        <span>Total</span>
+        <span class="order-total-val" id="order-total">15 000 FCFA</span>
+      </div>
+    </div>
+
+    <button class="pay-btn" id="pay-btn" aria-label="Confirmer et payer l'abonnement" onclick="handlePayment()">
+      <div class="spinner" id="pay-spinner"></div>
+      <span id="pay-btn-text">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Confirmer et payer — 15 000 FCFA
+      </span>
+    </button>
+    <div class="pay-security">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Paiement sécurisé via CinetPay · Données chiffrées SSL
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2 class="faq-title">Questions fréquentes</h2>
+    <div class="faq-grid" role="list">
+      <div class="faq-item" role="listitem">
+        <div class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          Puis-je annuler à tout moment ?
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-answer">Oui, sans engagement. Tu peux annuler ton abonnement à tout moment depuis ton tableau de bord. L'accès reste actif jusqu'à la fin de la période payée.</div>
+      </div>
+      <div class="faq-item" role="listitem">
+        <div class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          Comment fonctionne le paiement Mobile Money ?
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-answer">Tu entres ton numéro Orange Money ou Moov Money. Tu reçois un code USSD de confirmation sur ton téléphone. Tu valides, et l'abonnement est activé immédiatement.</div>
+      </div>
+      <div class="faq-item" role="listitem">
+        <div class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          Les alertes WhatsApp fonctionnent comment ?
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-answer">Tu configures tes secteurs et mots-clés dans le dashboard. Chaque matin dès 07h00, tu reçois un message WhatsApp avec les AO du jour qui correspondent à tes critères.</div>
+      </div>
+      <div class="faq-item" role="listitem">
+        <div class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          Que couvre la réduction annuelle de 20% ?
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-answer">En choisissant la facturation annuelle, tu paies 12 mois au prix de 9,6 mois. Exemple : le plan Pro passe de 15 000 à 12 000 FCFA/mois, soit 144 000 FCFA/an au lieu de 180 000.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA final -->
+  <div class="cta-section">
+    <h2 class="cta-title">Ton premier AO demain matin</h2>
+    <p class="cta-sub">Rejoins les PME et consultants burkinabè qui ne ratent plus aucune opportunité. Inscription en 2 minutes.</p>
+    <div class="cta-actions">
+      <button class="btn btn-primary" style="font-size:14px;padding:12px 28px;" aria-label="Commencer avec le plan gratuit" onclick="showToast('Redirection inscription...')">
+        Commencer gratuitement
+      </button>
+      <button class="btn btn-ghost" style="font-size:14px;padding:12px 24px;background:rgba(255,255,255,.1);color:white;border-color:rgba(255,255,255,.2);" aria-label="Voir une démonstration" onclick="showToast('Chargement de la démo...')">
+        Voir une démo
+      </button>
+    </div>
+  </div>
+
+</div><!-- /plans-wrap -->
+
+<!-- TOAST -->
+<div class="toast hidden" id="toast"><span id="toast-msg">Action effectuée</span></div>
+
+<script>
+var currentBilling = 'monthly';
+var currentPlan = 'pro';
+var currentMethod = 'om';
+
+var prices = {
+  pro:    { monthly: 15000, annual: 12000 },
+  equipe: { monthly: 45000, annual: 36000 }
+};
+
+function showToast(msg, duration) {
+  duration = duration || 2500;
+  var t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function() { t.classList.add('hidden'); }, duration);
+}
+
+function setBilling(type) {
+  currentBilling = type;
+  var sw = document.getElementById('billing-switch');
+  sw.setAttribute('aria-checked', String(type === 'annual'));
+  sw.classList.toggle('annual', type === 'annual');
+  document.getElementById('opt-monthly').classList.toggle('active', type === 'monthly');
+  document.getElementById('opt-annual').classList.toggle('active', type === 'annual');
+  updatePrices();
+  updateSummary();
+}
+
+function toggleBilling() {
+  setBilling(currentBilling === 'monthly' ? 'annual' : 'monthly');
+}
+
+function updatePrices() {
+  var isAnnual = currentBilling === 'annual';
+  var proP = prices.pro[currentBilling].toLocaleString('fr-FR');
+  var teamP = prices.equipe[currentBilling].toLocaleString('fr-FR');
+  document.getElementById('pro-price').innerHTML = proP + ' <span class="plan-price-unit">FCFA / mois</span>';
+  document.getElementById('team-price').innerHTML = teamP + ' <span class="plan-price-unit">FCFA / mois</span>';
+  document.getElementById('pro-annual').textContent = isAnnual ? 'Soit 144 000 FCFA / an (-20%)' : '';
+  document.getElementById('team-annual').textContent = isAnnual ? 'Soit 432 000 FCFA / an (-20%)' : '';
+  var payText = document.getElementById('pay-btn-text');
+  if (payText && currentPlan !== 'gratuit') {
+    var p = prices[currentPlan] ? prices[currentPlan][currentBilling] : 0;
+    payText.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Confirmer et payer — ' + p.toLocaleString('fr-FR') + ' FCFA';
+  }
+}
+
+function selectPlan(plan) {
+  currentPlan = plan;
+  updateSummary();
+  updatePrices();
+}
+
+function selectMethod(el, method) {
+  currentMethod = method;
+  document.querySelectorAll('.payment-method').forEach(function(m) {
+    m.classList.remove('selected');
+    m.setAttribute('aria-checked','false');
+  });
+  el.classList.add('selected');
+  el.setAttribute('aria-checked','true');
+  var showCard = method === 'card';
+  ['field-card','field-expiry','field-cvv','field-cardholder'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = showCard ? '' : 'none';
+  });
+  var om = document.getElementById('field-om');
+  if (om) om.style.display = (method === 'om' || method === 'mv') ? '' : 'none';
+  if (method === 'mv') {
+    var ph = document.querySelector('#field-om .phone-prefix');
+    if (ph) ph.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 0111.82 19a19.5 19.5 0 01-6.29-6.3 19.79 19.79 0 01-2.92-8.72A2 2 0 014.76 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.91 9.91a16 16 0 006.18 6.18l1.07-1.07a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg> +226';
+    var lbl = document.querySelector('#field-om .form-label');
+    if (lbl) lbl.textContent = 'Numéro Moov Money';
+    var inp = document.getElementById('om-phone');
+    if (inp) inp.setAttribute('aria-label','Numéro Moov Money');
+  } else if (method === 'om') {
+    var lbl2 = document.querySelector('#field-om .form-label');
+    if (lbl2) lbl2.textContent = 'Numéro Orange Money';
+    var inp2 = document.getElementById('om-phone');
+    if (inp2) inp2.setAttribute('aria-label','Numéro Orange Money');
+  }
+  var names = { om:'Orange Money', mv:'Moov Money', card:'Carte bancaire' };
+  document.getElementById('order-method').textContent = names[method] || method;
+}
+
+function updateSummary() {
+  var planNames = { pro:'Plan Pro', equipe:'Plan Equipe', gratuit:'Plan Gratuit' };
+  document.getElementById('order-plan').textContent = planNames[currentPlan] || 'Plan Pro';
+  document.getElementById('order-period').textContent = currentBilling === 'annual' ? 'Annuel (-20%)' : 'Mensuel';
+  var p = prices[currentPlan] ? prices[currentPlan][currentBilling] : 0;
+  document.getElementById('order-total').textContent = p.toLocaleString('fr-FR') + ' FCFA';
+}
+
+function scrollToPaiement() {
+  document.getElementById('paiement-section').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function handlePayment() {
+  var btn = document.getElementById('pay-btn');
+  var spinner = document.getElementById('pay-spinner');
+  var txt = document.getElementById('pay-btn-text');
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  if (txt) txt.style.display = 'none';
+  setTimeout(function() {
+    spinner.style.display = 'none';
+    btn.disabled = false;
+    if (txt) txt.style.display = '';
+    if (currentMethod === 'om' || currentMethod === 'mv') {
+      showToast('Code USSD envoye sur votre telephone — confirmez le paiement');
+    } else {
+      showToast('Paiement en cours de traitement...');
+    }
+  }, 2000);
+}
+
+function formatCard(input) {
+  var v = input.value.replace(/\D/g,'').substring(0,16);
+  input.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+
+function toggleFaq(el) {
+  var item = el.closest('.faq-item');
+  var isOpen = item.classList.toggle('open');
+  el.setAttribute('aria-expanded', String(isOpen));
+}
+</script>
+</body>
+</html>
