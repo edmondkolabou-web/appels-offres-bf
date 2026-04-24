@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetSync Gov — Appels d'offres Burkina Faso</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0082C9;--blue-dark:#005f94;--blue-deeper:#042C53;--blue-light:#E6F1FB;--blue-100:#B5D4F4;--green:#1D9E75;--green-light:#EAF3DE;--amber:#BA7517;--amber-light:#FAEEDA;--red:#E24B4A;--ink:#0F1923;--ink-2:#2A3440;--ink-500:#4A5568;--muted:#64748B;--border:#E2E8F0;--border-md:#CBD5E1;--surface:#F7F9FB;--surface-2:#EFF3F7;--white:#FFFFFF;--shadow-sm:0 1px 3px rgba(15,25,35,.06),0 1px 2px rgba(15,25,35,.04);--shadow-md:0 4px 12px rgba(15,25,35,.08),0 2px 4px rgba(15,25,35,.04);--shadow-lg:0 12px 32px rgba(15,25,35,.10),0 4px 8px rgba(15,25,35,.05);--shadow-blue:0 4px 16px rgba(0,130,201,.25);--radius-sm:4px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px;--radius-2xl:24px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);background:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.delay-1{transition-delay:.1s}.delay-2{transition-delay:.2s}.delay-3{transition-delay:.3s}.delay-4{transition-delay:.4s}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--ink);text-decoration:none}
+.nav-logo-badge{background:var(--blue);color:white;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:var(--radius-sm)}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-size:14px;color:var(--muted);text-decoration:none;font-weight:400;transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{background:var(--blue);color:white;font-size:13px;font-weight:500;padding:8px 20px;border-radius:var(--radius-md);text-decoration:none;transition:background .2s,transform .15s}
+.nav-cta:hover{background:var(--blue-dark);transform:translateY(-1px)}
+.nav-mobile{display:none;background:none;border:none;cursor:pointer;padding:4px}
+
+.hero{min-height:90vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;max-width:1200px;margin:0 auto;padding:5rem 2rem 4rem;position:relative}
+.hero::before{content:'';position:absolute;top:-120px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(0,130,201,.06) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--blue-light);color:var(--blue);font-size:12px;font-weight:500;padding:5px 14px;border-radius:20px;margin-bottom:1.5rem;animation:fadeUp .5s ease both}
+.hero-tag::before{content:'';width:6px;height:6px;background:var(--blue);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(2.4rem,5vw,3.8rem);line-height:1.12;color:var(--ink);margin-bottom:1.5rem;animation:fadeUp .5s .1s ease both}
+.hero-title em{font-style:italic;color:var(--blue)}
+.hero-desc{font-size:1.05rem;color:var(--muted);max-width:480px;margin-bottom:2.5rem;line-height:1.7;animation:fadeUp .5s .2s ease both}
+.hero-actions{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;animation:fadeUp .5s .3s ease both}
+.btn-primary{background:var(--blue);color:white;font-size:15px;font-weight:500;padding:13px 28px;border-radius:10px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:background .2s,transform .15s,box-shadow .2s;box-shadow:var(--shadow-blue);border:none;cursor:pointer;font-family:inherit}
+.btn-primary:hover{background:var(--blue-dark);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,130,201,.35)}
+.btn-secondary{font-size:15px;color:var(--muted);text-decoration:none;font-weight:400;display:inline-flex;align-items:center;gap:6px;transition:color .2s}
+.btn-secondary:hover{color:var(--ink)}
+.hero-sub{margin-top:2.5rem;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;animation:fadeUp .5s .4s ease both}
+.hero-sub-item{display:flex;align-items:center;gap:5px}
+.hero-sub-item svg{color:var(--green);flex-shrink:0}
+
+.hero-visual{animation:fadeUp .6s .25s ease both}
+.alert-phone{background:var(--ink);border-radius:28px;padding:28px 24px;position:relative;max-width:340px;margin:0 auto;box-shadow:0 24px 64px rgba(15,25,35,.25),0 0 0 1px rgba(255,255,255,.05),inset 0 1px 0 rgba(255,255,255,.05)}
+.phone-notch{width:80px;height:6px;background:rgba(255,255,255,.12);border-radius:3px;margin:0 auto 20px}
+.wa-header{display:flex;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:14px}
+.wa-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:white;flex-shrink:0}
+.wa-name{font-size:13px;font-weight:500;color:white}
+.wa-status{font-size:11px;color:#25D366}
+.wa-bubble{background:#1E2D3A;border-radius:4px 14px 14px 14px;padding:12px 14px;margin-bottom:8px;animation:fadeUp .4s .6s ease both}
+.wa-tag{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#25D366;margin-bottom:6px}
+.wa-title{font-size:13px;font-weight:500;color:white;line-height:1.4;margin-bottom:6px}
+.wa-meta{font-size:11px;color:rgba(255,255,255,.5);line-height:1.6}
+.wa-chip{display:inline-block;font-size:10px;font-weight:500;background:rgba(0,130,201,.3);color:#5EC4F5;padding:2px 8px;border-radius:var(--radius-sm);margin:4px 3px 0 0}
+.wa-time{font-size:10px;color:rgba(255,255,255,.25);text-align:right;margin-top:4px}
+.wa-bubble-2{background:#0F2231;border-radius:4px 14px 14px 14px;padding:10px 14px;opacity:.55;margin-bottom:8px;animation:fadeUp .4s .8s ease both}
+.floating-badge{position:absolute;top:-14px;right:-14px;background:var(--green);color:white;font-size:11px;font-weight:500;padding:6px 14px;border-radius:20px;white-space:nowrap;box-shadow:0 4px 16px rgba(29,158,117,.4);animation:float 3s ease-in-out infinite}
+
+.trust-bar{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.25rem 2rem;text-align:center}
+.trust-label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem}
+.trust-logos{display:flex;align-items:center;justify-content:center;gap:2.5rem;flex-wrap:wrap;opacity:.55}
+.trust-logo{font-size:13px;font-weight:600;color:var(--ink-500);letter-spacing:.02em;display:flex;align-items:center;gap:6px}
+
+.stats-strip{background:var(--blue-deeper);padding:3rem 2rem;position:relative;overflow:hidden}
+.stats-strip::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none}
+.stats-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;text-align:center;position:relative}
+.stat-item{position:relative}
+.stat-item:not(:last-child)::after{content:'';position:absolute;right:0;top:10%;height:80%;width:1px;background:rgba(255,255,255,.1)}
+.stat-num{font-family:'DM Serif Display',serif;font-size:2.4rem;color:var(--white);display:block;margin-bottom:4px}
+.stat-lbl{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5}
+
+section{padding:6rem 2rem}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-tag{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:.75rem}
+.section-title{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);line-height:1.2;margin-bottom:1rem}
+.section-desc{font-size:1rem;color:var(--muted);max-width:560px;line-height:1.7}
+
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:3.5rem}
+.feature-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.75rem;transition:transform .25s,box-shadow .25s,border-color .25s;position:relative;overflow:hidden}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--green));opacity:0;transition:opacity .25s}
+.feature-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:rgba(0,130,201,.15)}
+.feature-card:hover::before{opacity:1}
+.feat-icon{width:44px;height:44px;border-radius:var(--radius-lg);background:var(--blue-light);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem}
+.feat-icon svg{width:22px;height:22px;color:var(--blue)}
+.feat-title{font-size:15px;font-weight:600;margin-bottom:.5rem;color:var(--ink)}
+.feat-desc{font-size:13px;color:var(--muted);line-height:1.6}
+
+.how-bg{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3.5rem}
+.step-card{position:relative;padding:2rem 1.5rem;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);text-align:center}
+.step-num{width:44px;height:44px;border-radius:50%;background:var(--blue);color:white;font-family:'DM Serif Display',serif;font-size:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;box-shadow:var(--shadow-blue)}
+.step-connector{position:absolute;top:42px;right:-1rem;width:2rem;height:2px;background:var(--border-md)}
+.step-connector::after{content:'\2192';position:absolute;right:-2px;top:-9px;color:var(--border-md);font-size:14px}
+.step-title{font-size:15px;font-weight:600;margin-bottom:.5rem}
+.step-desc{font-size:13px;color:var(--muted);line-height:1.6}
+
+.pricing-section{background:var(--white)}
+.pricing-toggle-wrap{display:flex;align-items:center;justify-content:center;gap:.75rem;margin-top:1.5rem;margin-bottom:3rem}
+.pricing-toggle-label{font-size:13px;color:var(--muted)}.pricing-toggle-label.active{color:var(--ink);font-weight:500}
+.pricing-toggle{width:44px;height:24px;background:var(--border-md);border-radius:12px;position:relative;cursor:pointer;transition:background .2s}
+.pricing-toggle.on{background:var(--blue)}
+.pricing-toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:white;border-radius:50%;transition:transform .2s;box-shadow:var(--shadow-sm)}
+.pricing-toggle.on::after{transform:translateX(20px)}
+.pricing-save-badge{font-size:10px;font-weight:600;background:var(--green-light);color:var(--green);padding:2px 8px;border-radius:10px;margin-left:.25rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;max-width:960px;margin:0 auto}
+.plan{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-2xl);padding:2rem 1.75rem;position:relative;transition:transform .25s,box-shadow .25s}
+.plan:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.plan.featured{border:2px solid var(--blue);box-shadow:var(--shadow-blue)}
+.plan-top-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--blue);color:white;font-size:11px;font-weight:600;padding:3px 14px;border-radius:20px;white-space:nowrap;letter-spacing:.03em}
+.plan-name{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem}
+.plan-price{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--ink)}
+.plan-price span{font-size:13px;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:400}
+.plan-desc{font-size:13px;color:var(--muted);margin-top:.5rem;line-height:1.5}
+.plan-divider{height:1px;background:var(--border);margin:1.25rem 0}
+.plan-feat{font-size:13px;color:var(--ink-500);padding:5px 0;display:flex;align-items:center;gap:8px}
+.plan-feat::before{content:'\2713';font-weight:700;color:var(--green);flex-shrink:0;font-size:13px}
+.plan-feat.off{color:var(--muted);opacity:.5}
+.plan-feat.off::before{content:'\2013';color:var(--muted)}
+.plan-btn{display:block;text-align:center;font-size:14px;font-weight:500;padding:12px;border-radius:var(--radius-lg);text-decoration:none;margin-top:1.5rem;transition:all .2s;cursor:pointer;border:none;width:100%;font-family:inherit}
+.plan-btn-solid{background:var(--blue);color:white;box-shadow:var(--shadow-blue)}
+.plan-btn-solid:hover{background:var(--blue-dark);transform:translateY(-1px)}
+.plan-btn-ghost{background:var(--surface);color:var(--ink);border:1px solid var(--border)}
+.plan-btn-ghost:hover{background:var(--surface-2);border-color:var(--border-md)}
+
+.proof-section{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:3rem}
+.proof-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.75rem;position:relative}
+.proof-quote{font-size:14px;color:var(--ink-500);line-height:1.65;margin-bottom:1.25rem;font-style:italic}
+.proof-quote::before{content:'\201C';font-family:'DM Serif Display',serif;font-size:3rem;color:var(--blue-100);position:absolute;top:10px;left:16px;line-height:1}
+.proof-author{display:flex;align-items:center;gap:10px;padding-top:1rem;border-top:1px solid var(--border)}
+.proof-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:white;flex-shrink:0}
+.proof-name{font-size:13px;font-weight:500;color:var(--ink)}
+.proof-role{font-size:11px;color:var(--muted)}
+
+.faq-section{background:var(--white)}
+.faq-grid{max-width:720px;margin:3rem auto 0}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-question{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 0;cursor:pointer;font-size:15px;font-weight:500;color:var(--ink);background:none;border:none;width:100%;text-align:left;font-family:inherit;transition:color .2s;gap:1rem}
+.faq-question:hover{color:var(--blue)}
+.faq-icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--muted);transition:transform .25s,color .2s}
+.faq-item.open .faq-icon{transform:rotate(45deg);color:var(--blue)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-item.open .faq-answer{max-height:200px}
+.faq-answer-inner{padding:0 0 1.25rem;font-size:14px;color:var(--muted);line-height:1.7}
+
+.cta-section{background:var(--blue-deeper);padding:5rem 2rem;text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 120%,rgba(0,130,201,.2),transparent 60%);pointer-events:none}
+.cta-section .section-title{color:white}
+.cta-section .section-desc{color:rgba(255,255,255,.55);margin:0 auto 2rem}
+.cta-actions{display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap}
+
+footer{background:var(--ink);padding:3rem 2rem;text-align:center;font-size:13px;color:rgba(255,255,255,.4)}
+footer a{color:rgba(255,255,255,.55);text-decoration:none}
+footer a:hover{color:white}
+.footer-grid{max-width:800px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-links{display:flex;gap:1.5rem}
+
+@media(max-width:768px){
+  nav{padding:0 1rem}
+  .nav-links{display:none}
+  .nav-mobile{display:block}
+  .hero{grid-template-columns:1fr;gap:2.5rem;padding:3rem 1.25rem 2rem;min-height:auto}
+  .hero-title{font-size:clamp(1.8rem,7vw,2.4rem)}
+  .alert-phone{max-width:280px;padding:20px 18px}
+  .stats-inner{grid-template-columns:repeat(2,1fr);gap:1.5rem}
+  .stat-item:nth-child(2)::after{display:none}
+  .features-grid{grid-template-columns:1fr;gap:1rem}
+  .steps{grid-template-columns:1fr;gap:1rem}
+  .step-connector{display:none}
+  .pricing-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}
+  .proof-grid{grid-template-columns:1fr}
+  .section-inner{padding:0 .25rem}
+  section{padding:4rem 1.25rem}
+  .footer-grid{flex-direction:column;text-align:center}
+  .footer-links{justify-content:center}
+  .hero-sub{flex-direction:column;align-items:flex-start;gap:.5rem}
+}
+@media(max-width:480px){
+  .stats-inner{grid-template-columns:1fr 1fr}
+  .stat-num{font-size:1.8rem}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .btn-primary{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo"><span>NetSync</span><span class="nav-logo-badge">Gov</span></a>
+  <div class="nav-links">
+    <a href="#fonctionnalites">Fonctionnalités</a>
+    <a href="#comment-ca-marche">Comment ça marche</a>
+    <a href="#tarifs">Tarifs</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a href="#tarifs" class="nav-cta">Commencer gratuitement</a>
+  <button class="nav-mobile" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('mobile-open')">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</nav>
+
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">Burkina Faso · Marchés publics</div>
+    <h1 class="hero-title">Ne rate plus<br><em>aucun appel d'offres</em><br>au Burkina Faso</h1>
+    <p class="hero-desc">NetSync Gov agrège chaque jour tous les AO publiés par la DGCMEF, la CCI-BF et les agences internationales. Alerte WhatsApp dès la publication — avant tes concurrents.</p>
+    <div class="hero-actions">
+      <a href="#tarifs" class="btn-primary">Essayer gratuitement <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="#comment-ca-marche" class="btn-secondary"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> Voir comment ça marche</a>
+    </div>
+    <div class="hero-sub">
+      <div class="hero-sub-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Gratuit pour commencer</div>
+      <div class="hero-sub-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Paiement Orange Money / Moov</div>
+      <div class="hero-sub-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 100% en français</div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div style="position:relative;display:inline-block;">
+      <div class="alert-phone">
+        <div class="phone-notch"></div>
+        <div class="wa-header">
+          <div class="wa-avatar">N</div>
+          <div><div class="wa-name">NetSync Gov Alertes</div><div class="wa-status">● En ligne</div></div>
+        </div>
+        <div class="wa-bubble">
+          <div class="wa-tag">🔔 Nouveau AO — Informatique</div>
+          <div class="wa-title">Acquisition de matériel informatique pour le Ministère de l'Éducation</div>
+          <div class="wa-meta">Autorité : MENA / DMP<br>Référence : 2026-047/MENA/SG/DMP<br>Clôture : 28 avril 2026</div>
+          <div><span class="wa-chip">BF-MENA</span><span class="wa-chip">Informatique</span><span class="wa-chip">Ouvert</span></div>
+          <div class="wa-time">07:34 ✓✓</div>
+        </div>
+        <div class="wa-bubble-2">
+          <div class="wa-tag" style="color:rgba(255,255,255,.35);">🔔 Rappel clôture J-3</div>
+          <div class="wa-title" style="font-size:12px;opacity:.6;">Fournitures de bureau — MSHP</div>
+          <div class="wa-time">07:34 ✓✓</div>
+        </div>
+      </div>
+      <div class="floating-badge">🏆 +47 AO ce mois</div>
+    </div>
+  </div>
+</div>
+
+<div class="trust-bar">
+  <div class="trust-label">Sources de données agrégées</div>
+  <div class="trust-logos">
+    <div class="trust-logo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7v1a3 3 0 006 0V7m0 0v1a3 3 0 006 0V7m0 0v1a3 3 0 006 0V7H3z"/></svg> DGCMEF</div>
+    <div class="trust-logo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg> Banque Mondiale</div>
+    <div class="trust-logo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> CCI-BF</div>
+    <div class="trust-logo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg> UNDP / STEP</div>
+  </div>
+</div>
+
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat-item reveal"><span class="stat-num">714+</span><span class="stat-lbl">Numéros publiés par<br>la DGCMEF en 2026</span></div>
+    <div class="stat-item reveal delay-1"><span class="stat-num">15M</span><span class="stat-lbl">FCFA — seuil AO<br>ouvert obligatoire</span></div>
+    <div class="stat-item reveal delay-2"><span class="stat-num">7h00</span><span class="stat-lbl">Heure d'envoi de<br>tes alertes chaque matin</span></div>
+    <div class="stat-item reveal delay-3"><span class="stat-num">0</span><span class="stat-lbl">Concurrent local avec<br>des alertes WhatsApp</span></div>
+  </div>
+</div>
+
+<section id="fonctionnalites">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-tag">Fonctionnalités</p>
+      <h2 class="section-title">Tout ce qu'il faut pour<br>ne rien manquer</h2>
+      <p class="section-desc">Un seul outil pour agréger, filtrer et recevoir tous les appels d'offres publiés au Burkina Faso — sans effort de ta part.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.72A2 2 0 012 .4h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.29 6.29l.29-.29a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div><div class="feat-title">Alertes WhatsApp & Email</div><div class="feat-desc">Reçois l'AO dans ton secteur le matin même de sa publication. Configure tes mots-clés, tes secteurs, et laisse tourner.</div></div>
+      <div class="feature-card reveal delay-1"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div><div class="feat-title">Recherche full-text</div><div class="feat-desc">Tape "informatique 2026" et retrouve tous les AO correspondants. Les PDF DGCMEF enfin indexés et consultables en 2 secondes.</div></div>
+      <div class="feature-card reveal delay-2"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="feat-title">Calendrier des clôtures</div><div class="feat-desc">Visualise toutes tes dates limites en un coup d'œil. Alerte automatique J-3 avant chaque clôture pour ne jamais rater un dépôt.</div></div>
+      <div class="feature-card reveal delay-1"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div><div class="feat-title">Multi-sources agrégées</div><div class="feat-desc">DGCMEF, CCI-BF, UNDP, Banque Mondiale STEP — toutes les sources AO du Burkina centralisées en un seul endroit.</div></div>
+      <div class="feature-card reveal delay-2"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="18" y2="18"/></svg></div><div class="feat-title">Filtres avancés</div><div class="feat-desc">Filtre par secteur, type de procédure, région ou montant estimé. Tu ne vois que ce qui te concerne.</div></div>
+      <div class="feature-card reveal delay-3"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div class="feat-title">Mobile-first, en français</div><div class="feat-desc">Interface pensée pour le smartphone. Rapide, claire, entièrement en français. Fonctionne même avec une connexion lente.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="comment-ca-marche" class="how-bg">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-tag">Comment ça marche</p>
+      <h2 class="section-title">Automatique chaque matin</h2>
+      <p class="section-desc">Le pipeline tourne sans intervention humaine. Dès que la DGCMEF publie, tu es alerté.</p>
+    </div>
+    <div class="steps">
+      <div class="step-card reveal"><div class="step-num">1</div><div class="step-connector"></div><div class="step-title">Détection et parsing</div><div class="step-desc">Chaque matin dès 7h, notre système détecte le nouveau Quotidien DGCMEF, télécharge le PDF et extrait chaque AO automatiquement.</div></div>
+      <div class="step-card reveal delay-1"><div class="step-num">2</div><div class="step-connector"></div><div class="step-title">Structuration et indexation</div><div class="step-desc">Chaque AO est classé par secteur, type de procédure et date de clôture, puis indexé pour la recherche full-text.</div></div>
+      <div class="step-card reveal delay-2"><div class="step-num">3</div><div class="step-title">Alerte dans ta poche</div><div class="step-desc">Si un AO correspond à tes critères, tu reçois une alerte WhatsApp ou email avec tous les détails — titre, autorité, date limite, lien PDF.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="proof-section">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;">
+      <p class="section-tag">Témoignages</p>
+      <h2 class="section-title">Ils ne ratent plus rien</h2>
+      <p class="section-desc" style="margin:0 auto;">PME, consultants et bureaux d'études à Ouaga nous font déjà confiance.</p>
+    </div>
+    <div class="proof-grid">
+      <div class="proof-card reveal">
+        <div class="proof-quote">Avant, je passais 45 minutes chaque matin à éplucher le PDF de la DGCMEF. Maintenant je reçois directement les AO informatiques sur WhatsApp avant 8h.</div>
+        <div class="proof-author"><div class="proof-avatar" style="background:linear-gradient(135deg,#0082C9,#005f94);">AK</div><div><div class="proof-name">Abdoulaye K.</div><div class="proof-role">Gérant, bureau d'études IT — Ouaga</div></div></div>
+      </div>
+      <div class="proof-card reveal delay-1">
+        <div class="proof-quote">On a décroché un marché BTP de 85 millions parce qu'on a vu l'AO le jour même de sa publication. Nos concurrents l'ont découvert 3 jours après.</div>
+        <div class="proof-author"><div class="proof-avatar" style="background:linear-gradient(135deg,#1D9E75,#0F6E56);">FS</div><div><div class="proof-name">Fatimata S.</div><div class="proof-role">Directrice générale, PME BTP — Bobo</div></div></div>
+      </div>
+      <div class="proof-card reveal delay-2">
+        <div class="proof-quote">L'historique et les filtres par secteur m'évitent de rater les petits marchés de consultation qui ne font pas la une. C'est mon outil quotidien.</div>
+        <div class="proof-author"><div class="proof-avatar" style="background:linear-gradient(135deg,#BA7517,#854F0B);">IO</div><div><div class="proof-name">Ibrahim O.</div><div class="proof-role">Consultant indépendant — Ouaga</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tarifs" class="pricing-section">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;">
+      <p class="section-tag">Tarifs</p>
+      <h2 class="section-title">Simple et transparent</h2>
+      <p class="section-desc" style="margin:0 auto;">Paiement Mobile Money (Orange Money, Moov) ou carte bancaire. Sans engagement.</p>
+    </div>
+    <div class="pricing-toggle-wrap reveal">
+      <span class="pricing-toggle-label active" id="lbl-monthly">Mensuel</span>
+      <div class="pricing-toggle" id="pricing-toggle" onclick="togglePricing()"></div>
+      <span class="pricing-toggle-label" id="lbl-yearly">Annuel <span class="pricing-save-badge">-20%</span></span>
+    </div>
+    <div class="pricing-grid">
+      <div class="plan reveal">
+        <div class="plan-name">Gratuit</div>
+        <div class="plan-price">0 <span>FCFA / mois</span></div>
+        <div class="plan-desc">Pour découvrir la plateforme</div>
+        <div class="plan-divider"></div>
+        <div class="plan-feat">3 AO consultables par jour</div>
+        <div class="plan-feat">Recherche basique</div>
+        <div class="plan-feat off">Alertes email / WhatsApp</div>
+        <div class="plan-feat off">Historique complet</div>
+        <div class="plan-feat off">Filtres avancés</div>
+        <a href="#" class="plan-btn plan-btn-ghost">Commencer gratuitement</a>
+      </div>
+      <div class="plan featured reveal delay-1">
+        <div class="plan-top-badge">Recommandé</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price"><span class="price-value">15 000</span> <span>FCFA / <span class="price-period">mois</span></span></div>
+        <div class="plan-desc">Pour les PME et consultants actifs</div>
+        <div class="plan-divider"></div>
+        <div class="plan-feat">AO illimités</div>
+        <div class="plan-feat">Alertes email + WhatsApp</div>
+        <div class="plan-feat">Filtres secteur, région, montant</div>
+        <div class="plan-feat">Historique 12 mois</div>
+        <div class="plan-feat">Calendrier clôtures + alerte J-3</div>
+        <a href="#" class="plan-btn plan-btn-solid">Souscrire au plan Pro</a>
+      </div>
+      <div class="plan reveal delay-2">
+        <div class="plan-name">Équipe</div>
+        <div class="plan-price"><span class="price-value">45 000</span> <span>FCFA / <span class="price-period">mois</span></span></div>
+        <div class="plan-desc">Pour les structures avec plusieurs agents</div>
+        <div class="plan-divider"></div>
+        <div class="plan-feat">Tout Pro × 5 comptes</div>
+        <div class="plan-feat">Dashboard équipe partagé</div>
+        <div class="plan-feat">Suivi candidatures interne</div>
+        <div class="plan-feat">Historique 24 mois</div>
+        <div class="plan-feat">Support prioritaire</div>
+        <a href="#" class="plan-btn plan-btn-ghost">Contacter pour démo</a>
+      </div>
+    </div>
+    <p class="reveal" style="text-align:center;margin-top:2rem;font-size:13px;color:var(--muted);">15 000 FCFA/mois = 3 jours de travail facturé. Un seul AO décroché et la plateforme est rentabilisée ×10.</p>
+  </div>
+</section>
+
+<section id="faq" class="faq-section">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;">
+      <p class="section-tag">Questions fréquentes</p>
+      <h2 class="section-title">Tout savoir avant de commencer</h2>
+    </div>
+    <div class="faq-grid">
+      <div class="faq-item reveal"><button class="faq-question" onclick="toggleFaq(this)">D'où viennent les appels d'offres affichés ?<span class="faq-icon">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Nous agrégeons le Quotidien des Marchés Publics publié par la DGCMEF chaque jour, ainsi que les AO de la CCI-BF, du PNUD (UNDP) et de la Banque Mondiale (STEP). Chaque AO est extrait, structuré et indexé automatiquement.</div></div></div>
+      <div class="faq-item reveal delay-1"><button class="faq-question" onclick="toggleFaq(this)">Comment fonctionnent les alertes WhatsApp ?<span class="faq-icon">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Tu configures tes secteurs d'intérêt (IT, BTP, santé…) et tes mots-clés. Chaque matin à 7h, si un AO correspond à tes critères, tu reçois un message WhatsApp avec le titre, l'autorité, la date limite et un lien direct.</div></div></div>
+      <div class="faq-item reveal delay-1"><button class="faq-question" onclick="toggleFaq(this)">Puis-je payer par Orange Money ou Moov Money ?<span class="faq-icon">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Oui, nous acceptons Orange Money, Moov Money et les cartes bancaires (Visa, Mastercard). Le paiement est mensuel ou annuel, sans engagement — tu peux annuler à tout moment.</div></div></div>
+      <div class="faq-item reveal delay-2"><button class="faq-question" onclick="toggleFaq(this)">Quelle est la différence entre Gratuit et Pro ?<span class="faq-icon">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Le plan Gratuit te permet de consulter 3 AO par jour avec une recherche basique. Le plan Pro te donne un accès illimité, les alertes WhatsApp et email, les filtres avancés, l'historique sur 12 mois et le calendrier des clôtures avec rappels J-3.</div></div></div>
+      <div class="faq-item reveal delay-2"><button class="faq-question" onclick="toggleFaq(this)">Les données sont-elles à jour ?<span class="faq-icon">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Notre pipeline s'exécute automatiquement chaque matin. Les AO sont disponibles sur la plateforme dans les minutes qui suivent la publication officielle par la DGCMEF. C'est plus rapide que n'importe quelle autre source au Burkina.</div></div></div>
+      <div class="faq-item reveal delay-3"><button class="faq-question" onclick="toggleFaq(this)">Y a-t-il un engagement minimum ?<span class="faq-icon">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Aucun. Tu peux souscrire au mois et annuler quand tu veux. L'abonnement annuel offre 20% de réduction mais peut également être annulé avec remboursement au prorata.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="reveal">
+    <p class="section-tag" style="color:#5EC4F5;">Prêt à commencer ?</p>
+    <h2 class="section-title">Reçois ton premier AO<br>dès demain matin</h2>
+    <p class="section-desc">Rejoins les PME et consultants burkinabè qui ne ratent plus aucune opportunité. Inscription en 2 minutes.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn-primary" style="font-size:15px;padding:14px 32px;">Créer un compte gratuit <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="mailto:gov@netsync.bf" style="color:rgba(255,255,255,.5);font-size:14px;text-decoration:none;">Questions ? gov@netsync.bf</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div>© 2026 NetSync Gov — Ouagadougou, Burkina Faso · Un produit <a href="#">NetSync Africa</a></div>
+    <div class="footer-links"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Contact</a></div>
+  </div>
+</footer>
+
+<script>
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+function toggleFaq(btn){const item=btn.closest('.faq-item');const wasOpen=item.classList.contains('open');document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));if(!wasOpen)item.classList.add('open');}
+
+function togglePricing(){const toggle=document.getElementById('pricing-toggle');const isYearly=toggle.classList.toggle('on');document.getElementById('lbl-monthly').classList.toggle('active',!isYearly);document.getElementById('lbl-yearly').classList.toggle('active',isYearly);const pv=document.querySelectorAll('.price-value');const pp=document.querySelectorAll('.price-period');if(pv[0]){pv[0].textContent=isYearly?'144 000':'15 000';pp[0].textContent=isYearly?'an':'mois';}if(pv[1]){pv[1].textContent=isYearly?'432 000':'45 000';pp[1].textContent=isYearly?'an':'mois';}}
+
+const mobileStyle=document.createElement('style');mobileStyle.textContent='@media(max-width:768px){.nav-links.mobile-open{display:flex!important;flex-direction:column;position:fixed;top:60px;left:0;right:0;background:rgba(255,255,255,.98);backdrop-filter:blur(16px);padding:1.5rem 2rem;gap:1.25rem;border-bottom:1px solid var(--border);box-shadow:var(--shadow-lg);animation:fadeIn .2s ease}}';document.head.appendChild(mobileStyle);
+</script>
+</body>
+</html>
