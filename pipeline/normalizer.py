@@ -13,7 +13,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import text
 
 from pipeline.models import AppelOffre
-from pipeline.parser import AORaw
+from pipeline.parser import AORaw, LLMFallbackParser
+from pipeline.config import config as pipeline_config
 from pipeline.config import config
 
 logger = logging.getLogger("netsync.normalizer")
@@ -139,6 +140,60 @@ class AONormalizer:
         if date_cloture < date.today():
             return "cloture"
         return "ouvert"
+
+
+
+    def enrich_with_llm(self, ao_raw: AORaw) -> AORaw:
+        """
+        Si la confiance est < 0.5 et que la clé API Anthropic est configurée,
+        utilise Claude pour enrichir les champs manquants.
+        """
+        if ao_raw.confiance >= 0.5:
+            return ao_raw
+        if not pipeline_config.ANTHROPIC_API_KEY or not pipeline_config.USE_LLM_FALLBACK:
+            return ao_raw
+
+        try:
+            llm = LLMFallbackParser()
+            result = llm.parse(ao_raw.texte_brut)
+            if not result:
+                return ao_raw
+
+            # Enrichir les champs manquants (ne pas écraser ce qui existe)
+            if not ao_raw.reference and result.get("reference"):
+                ao_raw.reference = result["reference"]
+            if not ao_raw.autorite_contractante and result.get("autorite_contractante"):
+                ao_raw.autorite_contractante = result["autorite_contractante"]
+            if not ao_raw.date_cloture and result.get("date_cloture"):
+                from datetime import date as dt_date
+                try:
+                    ao_raw.date_cloture = dt_date.fromisoformat(result["date_cloture"])
+                except (ValueError, TypeError):
+                    pass
+            if not ao_raw.montant_estime and result.get("montant_estime"):
+                try:
+                    ao_raw.montant_estime = int(result["montant_estime"])
+                except (ValueError, TypeError):
+                    pass
+            if ao_raw.secteur == "autre" and result.get("secteur"):
+                ao_raw.secteur = result["secteur"]
+
+            # Recalculer la confiance
+            score = 0.0
+            if ao_raw.titre and len(ao_raw.titre) > 20: score += 0.25
+            if ao_raw.reference: score += 0.15
+            if ao_raw.autorite_contractante: score += 0.15
+            if ao_raw.date_cloture: score += 0.15
+            if ao_raw.montant_estime: score += 0.10
+            if ao_raw.type_procedure != "ouvert": score += 0.10
+            if ao_raw.secteur != "autre": score += 0.10
+            ao_raw.confiance = round(min(score, 1.0), 2)
+
+            logger.info(f"LLM enrichi: confiance {ao_raw.confiance} pour '{ao_raw.titre[:50]}'")
+        except Exception as e:
+            logger.warning(f"LLM fallback échoué: {e}")
+
+        return ao_raw
 
     # ── Déduplication et insertion ─────────────────────────────────────────────
 
