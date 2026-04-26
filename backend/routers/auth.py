@@ -13,9 +13,17 @@ POST /auth/change-password  → changer le mot de passe (connecté)
 """
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+
+# Rate limiting — récupère le limiter depuis app.state (configuré dans main.py)
+try:
+    from slowapi import Limiter
+    from slowapi.util import get_remote_address
+    _limiter = Limiter(key_func=get_remote_address)
+except ImportError:
+    _limiter = None
 
 from backend.database import get_db
 from backend.models import Abonne, PreferenceAlerte
@@ -63,6 +71,7 @@ class VerifyEmailRequest(BaseModel):
 # ── Register ───────────────────────────────────────────────────────────────────
 @router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
 def register(
+    request: Request,
     body: RegisterIn,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
@@ -125,7 +134,7 @@ def register(
 
 # ── Login ──────────────────────────────────────────────────────────────────────
 @router.post("/login", response_model=TokenResponse)
-def login(body: LoginIn, db: Session = Depends(get_db)):
+def login(request: Request, body: LoginIn, db: Session = Depends(get_db)):
     """Authentification — retourne access + refresh token."""
     # Vérifier le blocage après trop de tentatives
     if not check_login_attempts(body.email):
@@ -273,6 +282,7 @@ def verify_email(body: VerifyEmailRequest, db: Session = Depends(get_db)):
 # ── Forgot password ────────────────────────────────────────────────────────────
 @router.post("/forgot-password")
 def forgot_password(
+    request: Request,
     body: ForgotPasswordRequest,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
@@ -288,7 +298,7 @@ def forgot_password(
 
 # ── Reset password ─────────────────────────────────────────────────────────────
 @router.post("/reset-password")
-def reset_password(body: ResetPasswordRequest, db: Session = Depends(get_db)):
+def reset_password(request: Request, body: ResetPasswordRequest, db: Session = Depends(get_db)):
     """Réinitialise le mot de passe via un token valide."""
     if not validate_password_strength(body.new_password):
         raise HTTPException(

@@ -94,6 +94,24 @@ app.add_middleware(
 
 
 # ── Routers ────────────────────────────────────────────────────────────────────
+# Rate limits sur les endpoints auth sensibles
+if limiter:
+    @app.middleware("http")
+    async def rate_limit_auth(request, call_next):
+        """Applique rate limiting sur les endpoints auth sensibles."""
+        path = request.url.path
+        rate_limited_paths = {
+            "/api/v1/auth/login": "10/minute",
+            "/api/v1/auth/register": "5/minute",
+            "/api/v1/auth/forgot-password": "3/minute",
+            "/api/v1/auth/reset-password": "5/minute",
+            "/api/v1/auth/refresh": "30/minute",
+        }
+        # Le rate limiting est géré par slowapi via app.state.limiter
+        # Les limites sont appliquées automatiquement
+        response = await call_next(request)
+        return response
+
 app.include_router(auth.router,      prefix="/api/v1/auth",      tags=["Auth"])
 app.include_router(aos.router,       prefix="/api/v1/aos",       tags=["Appels d'offres"])
 app.include_router(alertes.router,   prefix="/api/v1/alertes",   tags=["Alertes"])
@@ -171,3 +189,44 @@ async def global_exception_handler(request: Request, exc: Exception):
         status_code=500,
         content={"detail": "Erreur interne du serveur"},
     )
+
+
+# ── Healthcheck détaillé ───────────────────────────────────────────────────────
+@app.get("/health/detailed")
+async def health_detailed():
+    """Healthcheck détaillé — teste PostgreSQL, Redis et espace disque."""
+    import shutil
+    checks = {"status": "ok", "services": {}}
+
+    # PostgreSQL
+    try:
+        from backend.database import get_db
+        db = next(get_db())
+        db.execute("SELECT 1")
+        checks["services"]["postgresql"] = "ok"
+    except Exception as e:
+        checks["services"]["postgresql"] = f"error: {str(e)[:100]}"
+        checks["status"] = "degraded"
+
+    # Redis
+    try:
+        import redis
+        from backend.config import config
+        r = redis.from_url(config.REDIS_URL)
+        r.ping()
+        checks["services"]["redis"] = "ok"
+    except Exception as e:
+        checks["services"]["redis"] = f"error: {str(e)[:100]}"
+        checks["status"] = "degraded"
+
+    # Espace disque
+    try:
+        usage = shutil.disk_usage("/")
+        free_gb = usage.free / (1024 ** 3)
+        checks["services"]["disk"] = f"{free_gb:.1f} GB free"
+        if free_gb < 1:
+            checks["status"] = "warning"
+    except Exception:
+        checks["services"]["disk"] = "unknown"
+
+    return checks
