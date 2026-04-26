@@ -16,6 +16,11 @@ const routes = [
       { path: 'alertes',   name: 'Alertes',   component: () => import('@/views/AlertesView.vue') },
 
       { path: 'profil',    name: 'Profil',    component: () => import('@/views/ProfilView.vue') },
+      { path: 'candidatures',     name: 'Candidatures',  component: () => import('@/views/CandidaturesView.vue') },
+      { path: 'candidatures/:id', name: 'CandidatureDetail', component: () => import('@/views/CandidaturesView.vue'), props: true },
+      { path: 'conformite',       name: 'Conformite',    component: () => import('@/views/ConformiteView.vue') },
+      { path: 'intelligence',     name: 'Intelligence',  component: () => import('@/views/IntelligenceView.vue') },
+      { path: 'institutions',     name: 'Institutions',  component: () => import('@/views/InstitutionsView.vue') },
     ],
   },
   { path: '/pricing', name: 'Pricing', component: () => import('@/views/PricingView.vue') },

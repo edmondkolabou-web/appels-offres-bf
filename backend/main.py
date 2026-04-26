@@ -18,6 +18,13 @@ from backend.routers import totp
 from backend.routers import subscription
 from backend.routers import oauth, email_verification
 
+# ── Modules métier (5 modules) ──
+from backend.modules.candidature.backend import router_candidatures, router_pieces, router_taches, router_offres
+from backend.modules.conformite.backend import router as conformite_router
+from backend.modules.intelligence.backend import router as intelligence_router
+from backend.modules.transparence.backend import router as transparence_router
+from backend.modules.institutions.backend import router_public as institutions_public_router, router_auth as institutions_auth_router
+
 # ── Logging ────────────────────────────────────────────────────────────────────
 logging.basicConfig(
     level=logging.INFO,
@@ -122,6 +129,17 @@ app.include_router(totp.router,     prefix="/api/v1/auth/2fa",  tags=["2FA"])
 app.include_router(subscription.router, prefix="/api/v1/subscription", tags=["Subscription"])
 app.include_router(oauth.router, prefix="/api/v1/auth/oauth", tags=["OAuth"])
 app.include_router(email_verification.router, prefix="/api/v1/auth", tags=["Email Verification"])
+
+# ── Modules métier ──
+app.include_router(router_candidatures, prefix="/api/v1/candidatures", tags=["Candidatures"])
+app.include_router(router_pieces,       prefix="/api/v1/pieces",       tags=["Pièces administratives"])
+app.include_router(router_taches,       prefix="/api/v1/candidatures", tags=["Tâches candidature"])
+app.include_router(router_offres,       prefix="/api/v1/candidatures", tags=["Offres IA"])
+app.include_router(conformite_router)   # Prefix déjà dans le router : /api/v1/conformite
+app.include_router(intelligence_router) # Prefix déjà dans le router : /api/v1/intelligence
+app.include_router(transparence_router) # Prefix déjà dans le router : /api/v1/transparence
+app.include_router(institutions_public_router)  # /api/v1/institutions (public)
+app.include_router(institutions_auth_router, prefix="/api/v1/mon-institution", tags=["Mon Institution"])
 
 
 # ── PDFs : stockage local + proxy téléchargement ──────────────────────────────

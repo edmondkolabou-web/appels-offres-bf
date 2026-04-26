@@ -119,4 +119,48 @@ export const paiementsApi = {
   statut:     (id)   => api.get(`/paiements/statut/${id}`),
 }
 
+
+
+export const candidaturesApi = {
+  list:       (params) => api.get('/candidatures', { params }),
+  detail:     (id)     => api.get(`/candidatures/${id}`),
+  create:     (data)   => api.post('/candidatures', data),
+  update:     (id, data) => api.put(`/candidatures/${id}`, data),
+  checklist:  (id)     => api.post(`/candidatures/${id}/checklist`),
+  genererOffre: (id, data) => api.post(`/candidatures/${id}/generer`, data),
+  validerOffre: (offreId) => api.put(`/candidatures/${offreId}/valider`),
+}
+
+export const conformiteApi = {
+  score:      ()       => api.get('/conformite/score'),
+  pieces:     ()       => api.get('/conformite/pieces'),
+  calendrier: (jours)  => api.get('/conformite/calendrier', { params: { jours } }),
+  catalogue:  ()       => api.get('/conformite/catalogue'),
+  verifier:   (aoId)   => api.get(`/conformite/verifier-candidature/${aoId}`),
+}
+
+export const intelligenceApi = {
+  resume:     ()       => api.get('/intelligence/resume'),
+  secteurs:   (params) => api.get('/intelligence/tendances/secteurs', { params }),
+  evolution:  (params) => api.get('/intelligence/tendances/evolution', { params }),
+  autorites:  (params) => api.get('/intelligence/autorites', { params }),
+  procedures: (params) => api.get('/intelligence/tendances/types-procedures', { params }),
+  rapport:    ()       => api.get('/intelligence/rapport/mensuel', { responseType: 'blob' }),
+}
+
+export const institutionsApi = {
+  dashboard:  ()       => api.get('/mon-institution/dashboard'),
+  profil:     (data)   => api.put('/mon-institution/profil', data),
+  enrichir:   (data)   => api.post('/mon-institution/enrichir-ao', data),
+  notifier:   (data)   => api.post('/mon-institution/notifier-soumissionnaires', data),
+  rapport:    (mois)   => api.get('/mon-institution/rapport-activite', { params: { mois }, responseType: 'blob' }),
+}
+
+export const piecesApi = {
+  list:       ()       => api.get('/pieces'),
+  expiration: (jours)  => api.get('/pieces/expiration', { params: { jours } }),
+  upload:     (data)   => api.post('/pieces', data, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  delete:     (id)     => api.delete(`/pieces/${id}`),
+}
+
 export default api

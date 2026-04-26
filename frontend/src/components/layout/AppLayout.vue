@@ -88,6 +88,10 @@ const IconDashboard = { template: `<svg width="16" height="16" viewBox="0 0 24 2
 const IconDoc       = { template: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>` }
 const IconStar      = { template: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>` }
 const IconBell      = { template: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>` }
+const IconKanban    = { template: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18"/></svg>` }
+const IconShield    = { template: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>` }
+const IconTrend     = { template: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>` }
+const IconBuilding  = { template: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22V12h6v10M12 6v.01M12 10v.01"/></svg>` }
 const IconLogout    = { template: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>` }
 
 const navItems = computed(() => [
@@ -95,6 +99,10 @@ const navItems = computed(() => [
   { to: '/aos',       label: 'Appels d\'offres', icon: IconDoc },
   { to: '/favoris',   label: 'Mes favoris',       icon: IconStar, badge: favorisCount.value || null },
   { to: '/alertes',   label: 'Mes alertes',        icon: IconBell, badge: alertesCount.value || null },
+  { to: '/candidatures', label: 'Candidatures',   icon: IconKanban },
+  { to: '/conformite',   label: 'Conformité',     icon: IconShield },
+  { to: '/intelligence', label: 'Intelligence',   icon: IconTrend },
+  { to: '/institutions', label: 'Mon institution', icon: IconBuilding },
 ])
 
 const titles = { Dashboard: 'Tableau de bord', AOList: 'Appels d\'offres', AODetail: 'Détail AO',
