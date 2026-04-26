@@ -63,6 +63,22 @@ import { RouterLink, RouterView, useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
+
+// Stores pour les badges sidebar
+let favorisCount = ref(0)
+let alertesCount = ref(0)
+import { onMounted } from 'vue'
+onMounted(async () => {
+  try {
+    const { favorisApi, alertesApi } = await import('@/api')
+    const [fav, al] = await Promise.all([
+      favorisApi.list().catch(() => ({ data: [] })),
+      alertesApi.list().catch(() => ({ data: [] })),
+    ])
+    favorisCount.value = (fav.data || []).length
+    alertesCount.value = (al.data || []).filter(a => a.actif).length
+  } catch {}
+})
 const router    = useRouter()
 const route     = useRoute()
 const collapsed = ref(false)
@@ -74,12 +90,12 @@ const IconStar      = { template: `<svg width="16" height="16" viewBox="0 0 24 2
 const IconBell      = { template: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>` }
 const IconLogout    = { template: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>` }
 
-const navItems = [
+const navItems = computed(() => [
   { to: '/dashboard', label: 'Tableau de bord', icon: IconDashboard },
   { to: '/aos',       label: 'Appels d\'offres', icon: IconDoc },
-  { to: '/favoris',   label: 'Mes favoris',       icon: IconStar },
-  { to: '/alertes',   label: 'Mes alertes',        icon: IconBell },
-]
+  { to: '/favoris',   label: 'Mes favoris',       icon: IconStar, badge: favorisCount.value || null },
+  { to: '/alertes',   label: 'Mes alertes',        icon: IconBell, badge: alertesCount.value || null },
+])
 
 const titles = { Dashboard: 'Tableau de bord', AOList: 'Appels d\'offres', AODetail: 'Détail AO',
                  Favoris: 'Mes favoris', Alertes: 'Mes alertes', Pricing: 'Tarifs', Profil: 'Mon profil' }

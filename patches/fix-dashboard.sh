@@ -1,3 +1,23 @@
+#!/bin/bash
+# ══════════════════════════════════════════════════════════════════════════════
+# NetSync Gov — Patch #4 : Dashboard amélioré + sidebar badges
+# Date : 26 avril 2026
+# Usage : cd ~/appels-offres-bf && bash patches/fix-dashboard.sh
+# ══════════════════════════════════════════════════════════════════════════════
+
+set -e
+echo ""
+echo "╔══════════════════════════════════════════════════════════════╗"
+echo "║  NetSync Gov — Patch #4 : Dashboard + Sidebar améliorés    ║"
+echo "╚══════════════════════════════════════════════════════════════╝"
+echo ""
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 1. Dashboard amélioré avec calendrier, notifications, graphique secteurs
+# ──────────────────────────────────────────────────────────────────────────────
+echo "🔧 [1/2] Réécriture DashboardView.vue (calendrier, notifs, secteurs)..."
+
+cat > frontend/src/views/DashboardView.vue << 'VUEEOF'
 <template>
   <div class="dashboard">
     <!-- Greeting -->
@@ -414,3 +434,88 @@ onMounted(async () => {
 @media(max-width:900px)  { .kpi-grid { grid-template-columns:1fr 1fr; } }
 @media(max-width:600px)  { .kpi-grid { grid-template-columns:1fr; } .dash-header { flex-direction:column; align-items:flex-start; gap:.25rem; } }
 </style>
+VUEEOF
+
+echo "   ✅ DashboardView.vue réécrit avec :"
+echo "      • En-tête avec greeting + date"
+echo "      • 4 KPIs améliorés (mois, correspondances, clôtures, favoris)"
+echo "      • 3 onglets : Nouveaux AOs / Calendrier clôtures / Par secteur"
+echo "      • Sidebar : notifications, alertes toggles, FOMO upgrade"
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 2. Sidebar badges (favoris, alertes) dans AppLayout.vue
+# ──────────────────────────────────────────────────────────────────────────────
+echo "🔧 [2/2] Ajout badges compteurs dans la sidebar..."
+
+python3 << 'PYFIX'
+with open("frontend/src/components/layout/AppLayout.vue", "r") as f:
+    content = f.read()
+
+# Ajouter les imports de stores pour les badges
+old_imports = """const authStore = useAuthStore()"""
+new_imports = """const authStore = useAuthStore()
+
+// Stores pour les badges sidebar
+let favorisCount = ref(0)
+let alertesCount = ref(0)
+import { onMounted } from 'vue'
+onMounted(async () => {
+  try {
+    const { favorisApi, alertesApi } = await import('@/api')
+    const [fav, al] = await Promise.all([
+      favorisApi.list().catch(() => ({ data: [] })),
+      alertesApi.list().catch(() => ({ data: [] })),
+    ])
+    favorisCount.value = (fav.data || []).length
+    alertesCount.value = (al.data || []).filter(a => a.actif).length
+  } catch {}
+})"""
+
+if "favorisCount" not in content:
+    content = content.replace(old_imports, new_imports)
+
+# Ajouter les badges aux navItems
+old_nav = """const navItems = [
+  { to: '/dashboard', label: 'Tableau de bord', icon: IconDashboard },
+  { to: '/aos',       label: 'Appels d\\'offres', icon: IconDoc },
+  { to: '/favoris',   label: 'Mes favoris',       icon: IconStar },
+  { to: '/alertes',   label: 'Mes alertes',        icon: IconBell },
+]"""
+
+new_nav = """const navItems = computed(() => [
+  { to: '/dashboard', label: 'Tableau de bord', icon: IconDashboard },
+  { to: '/aos',       label: 'Appels d\\'offres', icon: IconDoc },
+  { to: '/favoris',   label: 'Mes favoris',       icon: IconStar, badge: favorisCount.value || null },
+  { to: '/alertes',   label: 'Mes alertes',        icon: IconBell, badge: alertesCount.value || null },
+])"""
+
+if "computed(() => [" not in content:
+    content = content.replace(old_nav, new_nav)
+
+with open("frontend/src/components/layout/AppLayout.vue", "w") as f:
+    f.write(content)
+print("   ✅ Sidebar badges ajoutés (favoris: count, alertes: count actives)")
+PYFIX
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# RÉSUMÉ
+# ──────────────────────────────────────────────────────────────────────────────
+echo ""
+echo "══════════════════════════════════════════════════════════════"
+echo "✅ Patch #4 terminé — Dashboard + Sidebar améliorés :"
+echo ""
+echo "  DASH 1 ✅ Greeting + date du jour"
+echo "  DASH 2 ✅ 4 KPIs améliorés avec trends"
+echo "  DASH 3 ✅ Onglets : Nouveaux AOs / Calendrier clôtures / Par secteur"
+echo "  DASH 4 ✅ Graphique secteurs (barres horizontales)"
+echo "  DASH 5 ✅ Notifications dynamiques"
+echo "  DASH 6 ✅ Compteur FOMO upgrade (AOs ratés)"
+echo "  SIDE 1 ✅ Badges compteurs sidebar (favoris, alertes)"
+echo ""
+echo "Prochaine étape — commit et push :"
+echo "  git add -A"
+echo "  git commit -m 'feat(frontend): dashboard amélioré + sidebar badges (patch #4)'"
+echo "  git push origin main"
+echo "══════════════════════════════════════════════════════════════"
