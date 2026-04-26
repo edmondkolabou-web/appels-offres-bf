@@ -73,7 +73,14 @@ app.conf.beat_schedule = {
         "args": (),
     },
 
-    # Relance abonnements expirés : 08h00
+    # Reset compteurs AO quotidiens : 00h01 chaque jour
+    "reset-daily-counters-minuit": {
+        "task": "pipeline.celery_app.reset_daily_counters",
+        "schedule": crontab(hour=0, minute=1),
+        "args": (),
+    },
+
+        # Relance abonnements expirés : 08h00
     "relance-abonnements": {
         "task": "pipeline.celery_app.check_expired_subscriptions",
         "schedule": crontab(hour=8, minute=0),
@@ -225,6 +232,41 @@ def check_expired_subscriptions():
     finally:
         db.close()
 
+
+
+
+@app.task
+def reset_daily_counters():
+    """Reset les compteurs ao_consultes_auj pour tous les abonnés gratuits à minuit."""
+    from datetime import date
+    from sqlalchemy import create_engine, update
+    from sqlalchemy.orm import sessionmaker
+
+    db_url = os.getenv("DATABASE_URL", "postgresql://netsync:devpassword@localhost:5432/netsync_gov_dev")
+    engine = create_engine(db_url)
+    Session = sessionmaker(bind=engine)
+    db = Session()
+
+    try:
+        import sys
+        sys.path.insert(0, os.path.dirname(__file__))
+        from models import Abonne
+
+        result = db.execute(
+            update(Abonne)
+            .where(Abonne.ao_consultes_auj > 0)
+            .values(ao_consultes_auj=0, ao_consultes_reset_le=date.today())
+        )
+        db.commit()
+        count = result.rowcount
+        logger.info(f"Reset compteurs quotidiens: {count} abonné(s)")
+        return {"reset": count}
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Erreur reset compteurs: {e}")
+        return {"error": str(e)}
+    finally:
+        db.close()
 
 # ── Lancement direct (test) ────────────────────────────────────────────────────
 if __name__ == "__main__":

@@ -101,11 +101,6 @@ def list_aos(
     offset  = (page - 1) * per_page
     items   = base_q.offset(offset).limit(per_page).all()
 
-    # Incrémenter compteur quotidien si gratuit
-    if not current.est_pro:
-        current.ao_consultes_auj += 1
-        db.commit()
-
     return AOListResponse(
         items=[AOListItem.model_validate(ao) for ao in items],
         total=total,
@@ -194,3 +189,35 @@ def get_ao(
         db.commit()
 
     return AODetail.model_validate(ao)
+
+
+@router.get("/{ao_id}/pdf")
+def download_ao_pdf(
+    ao_id:   UUID,
+    db:      Session = Depends(get_db),
+    current: Abonne  = Depends(get_current_abonne),
+):
+    """Télécharge le PDF source d'un AO (proxy DGCMEF avec cache local)."""
+    import os
+    from fastapi.responses import FileResponse, RedirectResponse
+
+    ao = db.get(AppelOffre, ao_id)
+    if not ao:
+        raise HTTPException(status_code=404, detail="Appel d'offres introuvable")
+
+    if not ao.pdf_url:
+        raise HTTPException(status_code=404, detail="Pas de PDF disponible pour cet AO")
+
+    # Vérifier le cache local
+    if ao.numero_quotidien:
+        cache_dir = os.path.join(os.path.dirname(__file__), "..", "static", "pdfs")
+        cached_file = os.path.join(cache_dir, f"quotidien_{ao.numero_quotidien}.pdf")
+        if os.path.exists(cached_file):
+            return FileResponse(
+                cached_file,
+                media_type="application/pdf",
+                filename=f"DGCMEF_Quotidien_{ao.numero_quotidien}.pdf"
+            )
+
+    # Fallback : rediriger vers l'URL source
+    return RedirectResponse(url=ao.pdf_url, status_code=302)

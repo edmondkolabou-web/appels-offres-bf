@@ -49,7 +49,16 @@ class Abonne(Base):
 
     @property
     def est_pro(self) -> bool:
-        return self.plan in ("pro", "equipe")
+        """Vérifie que le plan est payant ET non expiré."""
+        if self.plan not in ("pro", "equipe", "institutionnel"):
+            return False
+        # Vérifier si le plan est expiré
+        if self.plan_expire_le and self.plan_expire_le < date.today():
+            return False
+        # Vérifier si le trial est expiré
+        if self.trial_actif and self.trial_expire_le and self.trial_expire_le < date.today():
+            return False
+        return True
 
 class AppelOffre(Base):
     __tablename__ = "appels_offres"

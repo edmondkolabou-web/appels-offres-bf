@@ -31,7 +31,7 @@
       <!-- Pro -->
       <div class="plan-card card featured">
         <div class="plan-badge">Recommandé</div>
-        <div class="plan-current" v-if="authStore.plan === 'pro'">✓ Votre plan actuel</div>
+        <div class="plan-current" v-if="authStore.isAuthenticated && authStore.plan === 'pro'">✓ Votre plan actuel</div>
         <div class="plan-name">Pro</div>
         <div class="plan-price">{{ proPrice.toLocaleString('fr-FR') }} <span class="plan-unit">FCFA / mois</span></div>
         <div v-if="billing === 'annual'" class="plan-annual">Soit 144 000 FCFA / an (-20%)</div>
@@ -114,7 +114,20 @@ const teamPrice   = computed(() => TARIFS.equipe[billing.value === 'annual' ? 'a
 const totalAmount = computed(() => selectedPlan.value ? TARIFS[selectedPlan.value][billing.value === 'annual' ? 'annual' : 'monthly'] : 0)
 
 function toggleBilling() { billing.value = billing.value === 'monthly' ? 'annual' : 'monthly' }
-function initiatePaiement(plan) { selectedPlan.value = plan; showPayment.value = true }
+function initiatePaiement(plan) {
+  if (!authStore.isAuthenticated) {
+    // Rediriger vers login avec redirect vers pricing
+    import('vue-router').then(({ useRouter }) => {
+      const router = useRouter()
+      router.push({ path: '/auth', query: { redirect: '/pricing' } })
+    }).catch(() => {
+      window.location.href = '/auth?redirect=/pricing'
+    })
+    return
+  }
+  selectedPlan.value = plan
+  showPayment.value = true
+}
 
 async function confirmPay() {
   paying.value = true

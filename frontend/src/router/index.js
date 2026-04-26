@@ -14,10 +14,11 @@ const routes = [
       { path: 'aos/:id',   name: 'AODetail',  component: () => import('@/views/AODetailView.vue'), props: true },
       { path: 'favoris',   name: 'Favoris',   component: () => import('@/views/FavorisView.vue') },
       { path: 'alertes',   name: 'Alertes',   component: () => import('@/views/AlertesView.vue') },
-      { path: 'pricing',   name: 'Pricing',   component: () => import('@/views/PricingView.vue') },
+
       { path: 'profil',    name: 'Profil',    component: () => import('@/views/ProfilView.vue') },
     ],
   },
+  { path: '/pricing', name: 'Pricing', component: () => import('@/views/PricingView.vue') },
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ]
 

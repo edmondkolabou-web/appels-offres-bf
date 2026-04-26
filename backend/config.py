@@ -1,10 +1,23 @@
 import os
+import secrets
 from pydantic_settings import BaseSettings
+
+def _get_jwt_secret():
+    """Retourne le JWT secret. En prod, DOIT être configuré via .env."""
+    secret = os.getenv("JWT_SECRET_KEY", "")
+    env = os.getenv("ENVIRONMENT", "development")
+    if not secret and env == "production":
+        raise RuntimeError(
+            "ERREUR CRITIQUE : JWT_SECRET_KEY non configuré en production. "
+            "Ajoutez JWT_SECRET_KEY dans votre .env avec une clé aléatoire de 64+ caractères. "
+            "Générez-en une avec : python3 -c \"import secrets; print(secrets.token_hex(64))\""
+        )
+    return secret or f"dev-only-{secrets.token_hex(32)}"
 
 class Config(BaseSettings):
     DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://netsync:devpassword@localhost:5432/netsync_gov_dev")
     REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
-    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "dev-secret-key")
+    JWT_SECRET_KEY: str = _get_jwt_secret()
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRE_MINUTES: int = 60 * 24 * 7
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
