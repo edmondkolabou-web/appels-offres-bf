@@ -131,15 +131,15 @@ app.include_router(oauth.router, prefix="/api/v1/auth/oauth", tags=["OAuth"])
 app.include_router(email_verification.router, prefix="/api/v1/auth", tags=["Email Verification"])
 
 # ── Modules métier ──
-app.include_router(router_candidatures, prefix="/api/v1/candidatures", tags=["Candidatures"])
-app.include_router(router_pieces,       prefix="/api/v1/pieces",       tags=["Pièces administratives"])
-app.include_router(router_taches,       prefix="/api/v1/candidatures", tags=["Tâches candidature"])
-app.include_router(router_offres,       prefix="/api/v1/candidatures", tags=["Offres IA"])
+app.include_router(router_candidatures, tags=["Candidatures"])
+app.include_router(router_pieces, tags=["Pièces administratives"])
+app.include_router(router_taches, tags=["Tâches candidature"])
+app.include_router(router_offres, tags=["Offres IA"])
 app.include_router(conformite_router)   # Prefix déjà dans le router : /api/v1/conformite
 app.include_router(intelligence_router) # Prefix déjà dans le router : /api/v1/intelligence
 app.include_router(transparence_router) # Prefix déjà dans le router : /api/v1/transparence
 app.include_router(institutions_public_router)  # /api/v1/institutions (public)
-app.include_router(institutions_auth_router, prefix="/api/v1/mon-institution", tags=["Mon Institution"])
+app.include_router(institutions_auth_router, tags=["Mon Institution"])
 
 
 # ── PDFs : stockage local + proxy téléchargement ──────────────────────────────
@@ -219,8 +219,9 @@ async def health_detailed():
     # PostgreSQL
     try:
         from backend.database import get_db
+        from sqlalchemy import text as sa_text
         db = next(get_db())
-        db.execute("SELECT 1")
+        db.execute(sa_text("SELECT 1"))
         checks["services"]["postgresql"] = "ok"
     except Exception as e:
         checks["services"]["postgresql"] = f"error: {str(e)[:100]}"
