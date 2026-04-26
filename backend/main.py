@@ -23,6 +23,7 @@ from backend.modules.candidature.backend import router_candidatures, router_piec
 from backend.modules.conformite.backend import router as conformite_router
 from backend.modules.intelligence.backend import router as intelligence_router
 from backend.modules.transparence.backend import router as transparence_router
+from backend.modules.assistant.backend import router as assistant_router
 from backend.modules.institutions.backend import router_public as institutions_public_router, router_auth as institutions_auth_router
 
 # ── Logging ────────────────────────────────────────────────────────────────────
@@ -137,7 +138,8 @@ app.include_router(router_taches, tags=["Tâches candidature"])
 app.include_router(router_offres, tags=["Offres IA"])
 app.include_router(conformite_router)   # Prefix déjà dans le router : /api/v1/conformite
 app.include_router(intelligence_router) # Prefix déjà dans le router : /api/v1/intelligence
-app.include_router(transparence_router) # Prefix déjà dans le router : /api/v1/transparence
+app.include_router(transparence_router)
+app.include_router(assistant_router)  # /api/v1/assistant # Prefix déjà dans le router : /api/v1/transparence
 app.include_router(institutions_public_router)  # /api/v1/institutions (public)
 app.include_router(institutions_auth_router, tags=["Mon Institution"])
 

@@ -163,4 +163,10 @@ export const piecesApi = {
   delete:     (id)     => api.delete(`/pieces/${id}`),
 }
 
+
+export const assistantApi = {
+  chat:        (data) => api.post('/assistant/chat', data),
+  suggestions: ()     => api.get('/assistant/suggestions'),
+}
+
 export default api
