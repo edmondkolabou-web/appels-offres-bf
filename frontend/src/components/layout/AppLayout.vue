@@ -51,7 +51,11 @@
         </div>
       </header>
       <main class="page-content">
-        <RouterView />
+        <RouterView v-slot="{ Component }">
+          <Transition name="page" mode="out-in">
+            <component :is="Component" />
+          </Transition>
+        </RouterView>
       </main>
     </div>
   </div>
@@ -167,6 +171,11 @@ async function handleLogout() {
 .upgrade-chip { font-size:11px; font-weight:600; background:var(--blue-500); color:var(--white); padding:4px 12px; border-radius:var(--radius-full); text-decoration:none; }
 .icon-btn { width:32px; height:32px; border-radius:var(--radius-md); border:1px solid var(--border); background:var(--white); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--muted); }
 .page-content { padding:1.5rem; flex:1; }
+
+.page-enter-active { animation:page-in .2s ease; }
+.page-leave-active { animation:page-out .15s ease forwards; }
+@keyframes page-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@keyframes page-out { to { opacity:0; transform:translateY(-4px); } }
 
 @media(max-width:768px) {
   .sidenav { transform:translateX(-100%); }

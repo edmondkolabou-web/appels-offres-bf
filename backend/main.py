@@ -27,10 +27,22 @@ from backend.modules.assistant.backend import router as assistant_router
 from backend.modules.institutions.backend import router_public as institutions_public_router, router_auth as institutions_auth_router
 
 # ── Logging ────────────────────────────────────────────────────────────────────
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(name)s] %(levelname)s — %(message)s",
-)
+# Logs structurés JSON en production, texte en dev
+import os as _os
+if _os.getenv("ENVIRONMENT") == "production":
+    try:
+        from pythonjsonlogger import jsonlogger
+        handler = logging.StreamHandler()
+        handler.setFormatter(jsonlogger.JsonFormatter(
+            "%(asctime)s %(name)s %(levelname)s %(message)s",
+            rename_fields={"asctime": "timestamp", "levelname": "level"}
+        ))
+        logging.root.handlers = [handler]
+        logging.root.setLevel(logging.INFO)
+    except ImportError:
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s — %(message)s")
+else:
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s — %(message)s")
 logger = logging.getLogger("netsync.api")
 
 # ── App ────────────────────────────────────────────────────────────────────────
@@ -210,6 +222,28 @@ async def global_exception_handler(request: Request, exc: Exception):
         content={"detail": "Erreur interne du serveur"},
     )
 
+
+
+# ── Error Handlers granulaires ─────────────────────────────────────────────────
+from fastapi.exceptions import RequestValidationError
+from sqlalchemy.exc import IntegrityError
+
+@app.exception_handler(RequestValidationError)
+async def validation_error_handler(request, exc):
+    errors = []
+    for e in exc.errors():
+        field = " → ".join(str(l) for l in e.get("loc", []))
+        errors.append({"field": field, "message": e.get("msg", ""), "type": e.get("type", "")})
+    return JSONResponse(status_code=422, content={"detail": "Erreur de validation", "errors": errors})
+
+@app.exception_handler(IntegrityError)
+async def integrity_error_handler(request, exc):
+    return JSONResponse(status_code=409, content={"detail": "Conflit de données — cet enregistrement existe déjà"})
+
+@app.exception_handler(Exception)
+async def global_error_handler(request, exc):
+    logger.error(f"Erreur serveur: {type(exc).__name__}: {exc}")
+    return JSONResponse(status_code=500, content={"detail": "Erreur interne du serveur"})
 
 # ── Healthcheck détaillé ───────────────────────────────────────────────────────
 @app.get("/health/detailed")

@@ -19,6 +19,27 @@ from backend.models import Abonne, AppelOffre
 from backend.schemas import AODetail, AOFilters, AOListItem, AOListResponse
 from backend.security import get_current_abonne
 
+# ── Cache Redis simple ──
+import json as _json
+import redis as _redis
+try:
+    _rcache = _redis.from_url("redis://localhost:6379/0")
+    _rcache.ping()
+except Exception:
+    _rcache = None
+
+def _cache_get(key):
+    if not _rcache: return None
+    try:
+        val = _rcache.get(f"nsg:{key}")
+        return _json.loads(val) if val else None
+    except: return None
+
+def _cache_set(key, data, ttl=300):
+    if not _rcache: return
+    try: _rcache.setex(f"nsg:{key}", ttl, _json.dumps(data))
+    except: pass
+
 router = APIRouter()
 
 
@@ -61,6 +82,7 @@ def _apply_filters(query, filters: AOFilters):
 @router.get("", response_model=AOListResponse)
 def list_aos(
     q:              Optional[str]  = Query(None, description="Recherche full-text"),
+    after_id:       Optional[str]  = Query(None, description="Curseur : ID du dernier AO (pagination curseur)"),
     secteur:        Optional[str]  = Query(None),
     statut:         Optional[str]  = Query("ouvert"),
     source:         Optional[str]  = Query(None),
@@ -96,6 +118,10 @@ def list_aos(
 
     base_q = db.query(AppelOffre)
     base_q = _apply_filters(base_q, filters)
+
+    # Pagination curseur (si after_id fourni, plus rapide que OFFSET sur gros datasets)
+    if after_id:
+        base_q = base_q.filter(AppelOffre.id > after_id)
 
     total   = base_q.count()
     offset  = (page - 1) * per_page
@@ -156,7 +182,10 @@ def aos_urgent(
 
 @router.get("/secteurs")
 def list_secteurs(db: Session = Depends(get_db)):
-    """Liste des secteurs présents en base avec leur nombre d'AOs."""
+    """Liste des secteurs présents en base avec leur nombre d'AOs. Caché 1h."""
+    cached = _cache_get("secteurs")
+    if cached:
+        return cached
     rows = (
         db.query(AppelOffre.secteur, func.count(AppelOffre.id).label("nb"))
         .filter(AppelOffre.statut == "ouvert")
@@ -164,7 +193,9 @@ def list_secteurs(db: Session = Depends(get_db)):
         .order_by(func.count(AppelOffre.id).desc())
         .all()
     )
-    return [{"secteur": r.secteur, "nb_ao": r.nb} for r in rows]
+    result = [{"secteur": r.secteur, "nb_ao": r.nb} for r in rows]
+    _cache_set("secteurs", result, ttl=3600)  # Cache 1h
+    return result
 
 
 @router.get("/{ao_id}", response_model=AODetail)

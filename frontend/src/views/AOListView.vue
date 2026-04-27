@@ -90,6 +90,11 @@ onMounted(async () => {
   await favorisStore.fetch()
   await search()
 })
+
+function isToday(dateStr) {
+  if (!dateStr) return false
+  return new Date(dateStr).toDateString() === new Date().toDateString()
+}
 </script>
 
 <style scoped>
@@ -110,4 +115,6 @@ onMounted(async () => {
 .freemium-content h3 { font-size:15px; color:var(--ink); }
 .freemium-content p { font-size:13px; color:var(--muted); max-width:380px; }
 @media(max-width:900px) { .ao-list-layout { grid-template-columns:1fr; } }
+.tag-nouveau { background:#EDE9FE; color:#5B21B6; animation:pulse-new 2s ease-in-out infinite; }
+@keyframes pulse-new { 0%,100%{opacity:1} 50%{opacity:.7} }
 </style>

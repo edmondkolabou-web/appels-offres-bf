@@ -1,3 +1,4 @@
+from datetime import date
 """
 NetSync Gov — Router : Authentification SaaS complète
 POST /auth/register         → créer un compte
@@ -91,6 +92,7 @@ def register(
             detail="Un compte existe déjà avec cet email",
         )
 
+    from datetime import timedelta
     abonne = Abonne(
         email=body.email,
         password_hash=hash_password(body.password),
@@ -98,10 +100,12 @@ def register(
         nom=body.nom,
         entreprise=body.entreprise,
         whatsapp=body.whatsapp,
-        plan=body.plan if hasattr(body, 'plan') and body.plan else "gratuit",
+        plan="pro",
         email_verifie=False,
         actif=True,
         ao_consultes_auj=0,
+        trial_actif=True,
+        trial_expire_le=date.today() + timedelta(days=7),
     )
     db.add(abonne)
     db.flush()

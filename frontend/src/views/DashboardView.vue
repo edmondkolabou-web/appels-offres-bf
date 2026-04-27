@@ -173,6 +173,23 @@
           <RouterLink to="/alertes" class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:.75rem;font-size:12px;">+ Nouvelle alerte</RouterLink>
         </div>
 
+        <!-- Activité récente -->
+        <div class="card">
+          <div class="section-head">
+            <h2 class="section-title">Activité récente</h2>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item" v-for="a in recentActivity" :key="a.id">
+              <span class="activity-dot" :class="a.color"></span>
+              <div class="activity-info">
+                <p class="activity-text">{{ a.text }}</p>
+                <p class="activity-time">{{ a.time }}</p>
+              </div>
+            </div>
+            <div v-if="!recentActivity.length" class="empty-mini">Aucune activité</div>
+          </div>
+        </div>
+
         <!-- Upgrade CTA si gratuit -->
         <div v-if="!authStore.isPro" class="upgrade-card">
           <h3 class="upgrade-title">Passer au plan Pro</h3>
@@ -266,6 +283,15 @@ const notifications = computed(() => {
     })
   }
   return notifs
+})
+
+const recentActivity = computed(() => {
+  const acts = []
+  acts.push({ id: 'login', text: 'Connexion au tableau de bord', time: 'À l\'instant', color: 'dot-blue' })
+  if (todayAOs.value.length) acts.push({ id: 'ao', text: `${todayAOs.value.length} nouveaux AOs consultés`, time: 'Aujourd\'hui', color: 'dot-green' })
+  if (favorisStore.items.length) acts.push({ id: 'fav', text: `${favorisStore.items.length} AO(s) en favoris`, time: 'En cours', color: 'dot-amber' })
+  if (alertesStore.items.filter(a => a.actif).length) acts.push({ id: 'alert', text: `${alertesStore.items.filter(a => a.actif).length} alerte(s) active(s)`, time: 'Configurées', color: 'dot-blue' })
+  return acts.slice(0, 5)
 })
 
 onMounted(async () => {
@@ -408,6 +434,19 @@ onMounted(async () => {
 .empty-state { text-align:center; padding:2rem 1rem; }
 .empty-state p { font-size:13px; color:var(--muted); }
 .empty-mini { font-size:12px; color:var(--muted); padding:.5rem 0; }
+
+/* Activity */
+.activity-list { display:flex; flex-direction:column; gap:2px; }
+.activity-item { display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
+.activity-item:last-child { border-bottom:none; }
+.activity-dot { width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+.dot-blue { background:var(--blue-500); }
+.dot-green { background:var(--green-400); }
+.dot-amber { background:var(--amber-400); }
+.dot-red { background:var(--red-400); }
+.activity-info { flex:1; }
+.activity-text { font-size:12px; font-weight:500; color:var(--ink); line-height:1.4; }
+.activity-time { font-size:10px; color:var(--muted); margin-top:1px; }
 
 /* Responsive */
 @media(max-width:1100px) { .dash-grid { grid-template-columns:1fr; } }
