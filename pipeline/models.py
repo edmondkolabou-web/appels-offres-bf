@@ -239,6 +239,7 @@ class PipelineLog(Base):
     duree_secondes   = Column(Integer)
     erreur           = Column(Text)
     nb_alertes       = Column(Integer, default=0)
+    nb_alertes       = Column(Integer, default=0)
     created_at       = Column(DateTime(timezone=True), server_default=func.now(), index=True)
 
     __table_args__ = (
