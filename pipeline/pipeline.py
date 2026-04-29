@@ -268,19 +268,19 @@ class PipelineOrchestrator:
             )
             if existing:
                 existing.statut = statut
-                existing.ao_extraits = ao_extraits
-                existing.ao_nouveaux = ao_nouveaux
+                existing.nb_ao_extraits = ao_extraits
+                existing.nb_ao_nouveaux = ao_nouveaux
                 existing.erreurs = erreurs
-                existing.duree_ms = duree_ms
+                existing.duree_secondes = duree_ms
             else:
                 log = PipelineLog(
                     numero_quotidien=numero,
                     statut=statut,
-                    ao_extraits=ao_extraits,
-                    ao_nouveaux=ao_nouveaux,
+                    nb_ao_extraits=ao_extraits,
+                    nb_ao_nouveaux=ao_nouveaux,
                     erreurs=erreurs,
                     pdf_url=pdf_url,
-                    duree_ms=duree_ms,
+                    duree_secondes=duree_ms,
                 )
                 self.db.add(log)
             self.db.flush()
