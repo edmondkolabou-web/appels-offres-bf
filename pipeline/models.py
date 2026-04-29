@@ -234,12 +234,12 @@ class PipelineLog(Base):
     numero_quotidien = Column(Integer, nullable=False, unique=True, index=True)
     statut           = Column(String(20), nullable=False,
                               comment="succes|echec|partiel")
-    ao_extraits      = Column(Integer, nullable=False, default=0)
-    ao_nouveaux      = Column(Integer, nullable=False, default=0)
-    duree_ms         = Column(Integer, comment="Durée de traitement en ms")
-    erreurs          = Column(JSONB, default=list)
+    nb_ao_extraits   = Column(Integer, nullable=False, default=0)
+    nb_ao_nouveaux   = Column(Integer, nullable=False, default=0)
+    duree_secondes   = Column(Integer)
+    erreur           = Column(Text)
     pdf_url          = Column(Text)
-    run_at           = Column(DateTime(timezone=True), server_default=func.now(), index=True)
+    created_at       = Column(DateTime(timezone=True), server_default=func.now(), index=True)
 
     __table_args__ = (
         CheckConstraint("statut IN ('succes','echec','partiel')", name="chk_pipeline_statut"),

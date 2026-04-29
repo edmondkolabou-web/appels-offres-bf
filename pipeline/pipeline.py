@@ -276,8 +276,8 @@ class PipelineOrchestrator:
                 log = PipelineLog(
                     numero_quotidien=numero,
                     statut=statut,
-                    nb_nb_ao_extraits=ao_extraits,
-                    nb_nb_ao_nouveaux=ao_nouveaux,
+                    nb_nb_nb_ao_extraits=ao_extraits,
+                    nb_nb_nb_ao_nouveaux=ao_nouveaux,
                     erreur=erreurs,
                     pdf_url=pdf_url,
                     duree_secondes=duree_ms,
