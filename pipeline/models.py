@@ -238,7 +238,7 @@ class PipelineLog(Base):
     nb_ao_nouveaux   = Column(Integer, nullable=False, default=0)
     duree_secondes   = Column(Integer)
     erreur           = Column(Text)
-    pdf_url          = Column(Text)
+    nb_alertes       = Column(Integer, default=0)
     created_at       = Column(DateTime(timezone=True), server_default=func.now(), index=True)
 
     __table_args__ = (
