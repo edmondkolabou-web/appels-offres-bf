@@ -270,15 +270,15 @@ class PipelineOrchestrator:
                 existing.statut = statut
                 existing.nb_ao_extraits = ao_extraits
                 existing.nb_ao_nouveaux = ao_nouveaux
-                existing.erreurs = erreurs
+                existing.erreur = erreurs
                 existing.duree_secondes = duree_ms
             else:
                 log = PipelineLog(
                     numero_quotidien=numero,
                     statut=statut,
-                    nb_ao_extraits=ao_extraits,
-                    nb_ao_nouveaux=ao_nouveaux,
-                    erreurs=erreurs,
+                    nb_nb_ao_extraits=ao_extraits,
+                    nb_nb_ao_nouveaux=ao_nouveaux,
+                    erreur=erreurs,
                     pdf_url=pdf_url,
                     duree_secondes=duree_ms,
                 )
