@@ -21,10 +21,12 @@ const routes = [
       { path: 'conformite',       name: 'Conformite',    component: () => import('@/views/ConformiteView.vue') },
       { path: 'intelligence',     name: 'Intelligence',  component: () => import('@/views/IntelligenceView.vue') },
       { path: 'institutions',     name: 'Institutions',  component: () => import('@/views/InstitutionsView.vue') },
+      { path: 'admin', name: 'Admin', component: () => import('@/views/AdminView.vue') },
       { path: 'assistant',        name: 'Assistant',     component: () => import('@/views/AssistantView.vue') },
     ],
   },
   { path: '/pricing', name: 'Pricing', component: () => import('@/views/PricingView.vue') },
+  { path: '/legal', name: 'Legal', component: () => import('@/views/LegalView.vue') },
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ]
 
