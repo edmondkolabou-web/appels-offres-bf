@@ -2,7 +2,7 @@
 NetSync Gov — API FastAPI principale (SaaS)
 Rate limiting, headers sécurité, CORS strict, routers
 """
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, StreamingResponse
 from pathlib import Path

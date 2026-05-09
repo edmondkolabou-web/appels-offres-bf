@@ -170,7 +170,17 @@ class PipelineOrchestrator:
         blocs = self.extractor.split_into_blocks(full_text)
         ao_raws = []
 
-        date_publication = date.today()  # À affiner depuis le nom du fichier
+        # Date de publication estimée à partir du numéro de quotidien
+        # Quotidien 4392 ≈ mai 2026, baseline calibrée
+        try:
+            from datetime import timedelta
+            # Numéro 4392 = ~02/05/2026 (calibration). 1 quotidien/jour ouvré (5/7).
+            BASELINE_NUM = 4392
+            BASELINE_DATE = date(2026, 5, 2)
+            jours_diff = (BASELINE_NUM - numero) * 1.4  # facteur 7/5 pour week-ends
+            date_publication = BASELINE_DATE - timedelta(days=int(jours_diff))
+        except Exception:
+            date_publication = date.today()
         for i, bloc in enumerate(blocs):
             try:
                 ao_raw = self.raw_parser.parse_block(bloc, date_publication)
@@ -223,6 +233,10 @@ class PipelineOrchestrator:
             except Exception as e:
                 logger.warning(f"  Erreur normalisation/insertion AO : {e}")
                 erreurs_pdf.append(f"Normalisation: {e}")
+                try:
+                    self.db.rollback()
+                except Exception:
+                    pass
 
         stats = normalizer.get_stats()
         logger.info(f"  Résultat : +{stats['inseres']} insérés, "
@@ -231,6 +245,14 @@ class PipelineOrchestrator:
 
         rapport["ao_inseres"] += stats["inseres"]
         rapport["ao_mis_a_jour"] += stats.get("mis_a_jour", 0)
+
+        # Commit progressif après chaque PDF (préserve les AOs même si alertes plantent ensuite)
+        try:
+            self.db.commit()
+            logger.info(f"  💾 Commit PDF n°{numero} : {stats['inseres']} AOs sauvegardés")
+        except Exception as e:
+            logger.error(f"  ❌ Erreur commit PDF n°{numero} : {e}")
+            self.db.rollback()
 
         # Flush pour avoir les IDs en BDD
         self.db.flush()
@@ -276,8 +298,8 @@ class PipelineOrchestrator:
                 log = PipelineLog(
                     numero_quotidien=numero,
                     statut=statut,
-                    nb_nb_nb_ao_extraits=ao_extraits,
-                    nb_nb_nb_ao_nouveaux=ao_nouveaux,
+                    nb_ao_extraits=ao_extraits,
+                    nb_ao_nouveaux=ao_nouveaux,
                     erreur=erreurs,
                     pdf_url=pdf_url,
                     duree_secondes=duree_ms,
@@ -286,6 +308,10 @@ class PipelineOrchestrator:
             self.db.flush()
         except Exception as e:
             logger.error(f"Erreur log pipeline : {e}")
+            try:
+                self.db.rollback()
+            except Exception:
+                pass
 
 
 # ── Point d'entrée Celery ──────────────────────────────────────────────────────

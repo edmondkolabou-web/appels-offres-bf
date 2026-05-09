@@ -380,5 +380,9 @@ class AlertEngine:
         except Exception as e:
             logger.error(f"Erreur log envoi : {e}")
 
+            try:
+                self.db.rollback()
+            except Exception:
+                pass
     def get_stats(self) -> dict:
         return dict(self._stats)

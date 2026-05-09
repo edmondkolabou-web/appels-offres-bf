@@ -1,40 +1,47 @@
-# Environnement
-.env
-.env.*
-!.env.example
-deploy/.env.production
-
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 .venv/
 venv/
 *.egg-info/
 dist/
-.pytest_cache/
+build/
+.eggs/
 
-# Node
-node_modules/
-dist/
-.nuxt/
+# Environnement
+.env
+.env.*
+!.env.example
 
-# IDE
-.vscode/settings.json
-.idea/
-*.swp
-
-# Docker
+# Logs
+logs/
 *.log
+/tmp/
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Base de données locale
+# Base de données
 *.db
 *.sqlite
 
-# PDFs téléchargés
-pipeline/data/pdfs/
-pipeline/data/pdfs/*.pdf
+# PDFs (trop lourds)
+backend/static/pdfs/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+
+# Backups pipeline
+pipeline/*.backup*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Docker volumes
+postgres_data/
+redis_data/
